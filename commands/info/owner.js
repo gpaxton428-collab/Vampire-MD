@@ -2,10 +2,9 @@ import fs from 'fs';
 
 export default {
   name: 'owner',
-  description: 'Send owner contact as vCard',
-  category: 'owner',
-  aliases: ['ownerinfo', 'creator', 'dev'],
-  ownerOnly: true,
+  description: 'Get owner contact as vCard',
+  category: 'info',
+  aliases: ['creator', 'dev'],
   async execute(sock, msg, args, prefix) {
     const chatId = msg.key.remoteJid;
 
