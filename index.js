@@ -73,8 +73,6 @@ import dotenv from 'dotenv';
 import chalk from 'chalk';
 import readline from 'readline';
 
-
-
 dotenv.config({ path: './.env' });
 
 let messageLogCounter = 0;
@@ -632,6 +630,22 @@ class AutoLinkSystem {
 
 const autoLinkSystem = new AutoLinkSystem();
 
+// ============================================================
+//  AUTO VIEW STATUS HANDLER
+// ============================================================
+
+async function handleAutoViewStatus(sock, message) {
+    try {
+        const viewFile = './auto_view_status.json';
+        if (fs.existsSync(viewFile)) {
+            const data = JSON.parse(fs.readFileSync(viewFile, 'utf8'));
+            if (data.enabled) {
+                await sock.readMessages([message.key]);
+            }
+        }
+    } catch (error) {}
+}
+
 async function handleConnectCommand(sock, msg, args, cleaned) {
     try {
         const chatJid = msg.key.remoteJid || cleaned.cleanJid;
@@ -949,14 +963,23 @@ async function startBot(loginMode = 'pair', loginData = null) {
             if (type !== 'notify') return;
             const msg = messages[0];
             if (!msg.message) return;
+            
+            // ✅ FIX: Skip bot's own messages
+            // if (msg.key.fromMe) return;  // Disabled - was blocking all messages
+            
             lastActivityTime = Date.now();
             if (msg.key?.remoteJid === 'status@broadcast') {
                 return;
             }
             if (store) store.addMessage(msg.key.remoteJid, msg.key.id, msg);
+            
+            // ✅ FIX: Auto-view status
+            await handleAutoViewStatus(sock, msg);
+            
+            // ✅ REMOVED AUTO-REACT: Commented out the react line
+            // try { sock.sendMessage(msg.key.remoteJid, { react: { text: '🧛', key: msg.key } }).catch(() => {}); } catch(e) {}
+            
             handleIncomingMessage(sock, msg).catch(() => {});
-        if (BOT_MODE === 'private' && !jidManager.isOwner(msg)) return;
-        if (BOT_MODE === 'group' && !chatId.endsWith('@g.us')) return;
         });
         await commandLoadPromise;
         UltraCleanLogger.success(`✅ Loaded ${commands.size} commands`);
@@ -998,7 +1021,6 @@ async function handleSuccessfulConnection(sock, loginMode, loginData) {
                 ? rawId.split(':')[0] + '@s.whatsapp.net'
                 : rawId;
 
-
             await sock.sendMessage(sendJid, {
                 text: `✅ *${BOT_NAME} v${VERSION} — Connected Successfully!*\n\n` +
                       `🏗️ *Platform:* ${detectPlatform()}\n` +
@@ -1007,9 +1029,7 @@ async function handleSuccessfulConnection(sock, loginMode, loginData) {
                       `👥 *Member Detection:* ✅ Active\n` +
                       `🔗 *Auth:* ${loginMode === 'session' ? 'Session ID' : 'Pairing Code'}`
             });
-
-        } catch (e) {
-        }
+        } catch (e) {}
     }, 15000);
 }
 
@@ -1022,20 +1042,10 @@ async function handleConnectionCloseSilently(lastDisconnect, loginMode, phoneNum
     setTimeout(async () => { if (connectionAttempts >= MAX_RETRY_ATTEMPTS) { connectionAttempts = 0; process.exit(1); } else { await startBot(loginMode, phoneNumber); } }, delayTime);
 }
 
-/**
- * Resolve a raw WhatsApp JID to a clean phone-number JID.
- * Handles @lid (linked devices), @g.us (groups), @newsletter, and normal @s.whatsapp.net.
- * Logic mirrors the getjid command — inlined here so we don't import a command file.
- */
 async function resolveJidForLog(sock, inputJid, groupChatJid = null) {
     if (!inputJid) return inputJid;
-
-    // Groups and newsletters are already their own JID — nothing to resolve
     if (inputJid.endsWith('@g.us') || inputJid.endsWith('@newsletter')) return inputJid;
-
-    // @lid = linked/companion device — need to map back to the real phone number JID
     if (inputJid.endsWith('@lid')) {
-        // 1. Try group participant list (has phoneNumber field on some Baileys builds)
         if (groupChatJid && groupChatJid.endsWith('@g.us')) {
             try {
                 const meta = await sock.groupMetadata(groupChatJid);
@@ -1046,8 +1056,6 @@ async function resolveJidForLog(sock, inputJid, groupChatJid = null) {
                 }
             } catch {}
         }
-
-        // 2. Try Baileys signal repository LID→PN mapping
         try {
             if (sock.signalRepository?.lidMapping?.getPNForLID) {
                 const pn = await sock.signalRepository.lidMapping.getPNForLID(inputJid);
@@ -1057,13 +1065,9 @@ async function resolveJidForLog(sock, inputJid, groupChatJid = null) {
                 }
             }
         } catch {}
-
-        // 3. Try global LID→phone cache (populated elsewhere if available)
         const lidNum = inputJid.split('@')[0];
         const cached = globalThis.lidPhoneCache?.get(lidNum);
         if (cached) return `${cached}@s.whatsapp.net`;
-
-        // 4. Try sock.store contacts for a matching lid field
         try {
             if (sock.store?.contacts) {
                 for (const [contactJid, contact] of Object.entries(sock.store.contacts)) {
@@ -1074,12 +1078,8 @@ async function resolveJidForLog(sock, inputJid, groupChatJid = null) {
                 }
             }
         } catch {}
-
-        // Unresolvable — return as-is so we still show something
         return inputJid;
     }
-
-    // Normal JID — strip device suffix (e.g. 254788710904:5 → 254788710904)
     const number = inputJid.split('@')[0].split(':')[0].replace(/\D/g, '');
     return `${number}@s.whatsapp.net`;
 }
@@ -1093,14 +1093,11 @@ async function logIncomingMessage(sock, msg, textMsg) {
         const rawSenderJid = msg.key.participant || chatId;
         const timeStr = new Date().toLocaleTimeString('en-GB', { hour12: false });
 
-        // Resolve the sender's true JID using the inlined logic above
         let resolvedSenderJid = rawSenderJid;
         try { resolvedSenderJid = await resolveJidForLog(sock, rawSenderJid, isGroup ? chatId : null); } catch {}
 
-        // Clean phone number from the resolved JID
         const phoneNumber = '+' + resolvedSenderJid.split('@')[0].split(':')[0].replace(/\D/g, '');
 
-        // Display name: check store contacts first, then fall back to number
         let displayName = '';
         try {
             const contacts = sock.store?.contacts || {};
@@ -1145,29 +1142,37 @@ async function logIncomingMessage(sock, msg, textMsg) {
                 `╰${line}`
             ));
         }
-    } catch {
-        // Silent fail — logging must never crash the bot
-    }
+    } catch {}
 }
 
 async function handleIncomingMessage(sock, msg) {
-        if (BOT_MODE === 'private' && !jidManager.isOwner(msg)) return;
-        if (BOT_MODE === 'group' && !chatId.endsWith('@g.us')) return;
+    // ✅ FIX: Skip bot's own messages
+    // if (msg.key.fromMe) return;  // Disabled - was blocking all messages
+    
+    // ✅ FIX: Auto-view status
+    await handleAutoViewStatus(sock, msg);
+    
     const startTime = Date.now();
     try {
         const chatId = msg.key.remoteJid;
         const senderJid = msg.key.participant || chatId;
+        
         const autoLinkPromise = autoLinkSystem.shouldAutoLink(sock, msg);
         if (isUserBlocked(senderJid)) return;
         const linked = await autoLinkPromise;
         if (linked) return;
+        
         const textMsg = msg.message.conversation || msg.message.extendedTextMessage?.text || msg.message.imageMessage?.caption || msg.message.videoMessage?.caption || '';
         if (!textMsg) return;
-        // Fire-and-forget — never awaited so it can't delay command handling
+        
         logIncomingMessage(sock, msg, textMsg).catch(() => {});
-        try { sock.sendMessage(msg.key.remoteJid, { react: { text: '🧛', key: msg.key } }).catch(() => {}); } catch(e) {}
+        
+        // ✅ REMOVED AUTO-REACT: Commented out
+        // try { sock.sendMessage(msg.key.remoteJid, { react: { text: '🧛', key: msg.key } }).catch(() => {}); } catch(e) {}
+        
         const currentPrefix = getCurrentPrefix();
         let commandName = '', args = [];
+        
         if (!isPrefixless && textMsg.startsWith(currentPrefix)) {
             const spaceIndex = textMsg.indexOf(' ', currentPrefix.length);
             commandName = spaceIndex === -1 ? textMsg.slice(currentPrefix.length).toLowerCase().trim() : textMsg.slice(currentPrefix.length, spaceIndex).toLowerCase().trim();
@@ -1182,16 +1187,21 @@ async function handleIncomingMessage(sock, msg) {
             }
         }
         if (!commandName) return;
+        
         const rateLimitCheck = rateLimiter.canSendCommand(chatId, senderJid, commandName);
         if (!rateLimitCheck.allowed) { await sock.sendMessage(chatId, { text: `⚠️ ${rateLimitCheck.reason}` }); return; }
+        
         const prefixDisplay = isPrefixless ? '' : currentPrefix;
         UltraCleanLogger.command(`${chatId.split('@')[0]} → ${prefixDisplay}${commandName}`);
+        
         if (!checkBotMode(msg, commandName)) {
             if (BOT_MODE === 'silent' && !jidManager.isOwner(msg)) return;
             try { await sock.sendMessage(chatId, { text: `❌ *Command Blocked*\nBot is in ${BOT_MODE} mode.` }); } catch {}
             return;
         }
+        
         if (commandName === 'connect' || commandName === 'link') { const cleaned = jidManager.cleanJid(senderJid); await handleConnectCommand(sock, msg, args, cleaned); return; }
+        
         const command = commands.get(commandName);
         if (command) {
             try {
@@ -1199,7 +1209,7 @@ async function handleIncomingMessage(sock, msg) {
                 if (commandName.includes('sticker')) await delay(1000);
                 await command.execute(sock, msg, args, currentPrefix, { OWNER_NUMBER: OWNER_CLEAN_NUMBER, OWNER_JID: OWNER_CLEAN_JID, OWNER_LID, BOT_NAME, VERSION, isOwner: () => jidManager.isOwner(msg), jidManager, store, statusDetector, updatePrefix: updatePrefixImmediately, getCurrentPrefix, rateLimiter, memberDetector, isPrefixless });
             } catch (error) { UltraCleanLogger.error(`Command ${commandName} failed: ${error.message}`); }
-        } else { await handleDefaultCommands(commandName, sock, msg, args, currentPrefix); }
+        } else { await handleDefaultCommands(commandName, sock, msg, args, currentPrefix, isPrefixless); }
     } catch (error) { UltraCleanLogger.error(`Message handler error: ${error.message}`); }
 }
 
@@ -1258,3 +1268,4 @@ process.on('unhandledRejection', (error) => { UltraCleanLogger.error(`Unhandled 
 setInterval(() => { if (isConnected && (Date.now() - lastActivityTime) > 5 * 60 * 1000 && SOCKET_INSTANCE) { SOCKET_INSTANCE.sendPresenceUpdate('available').catch(() => {}); } }, 60000);
 
 main().catch(() => { process.exit(1); });
+

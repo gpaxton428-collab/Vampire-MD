@@ -23,9 +23,14 @@ export default {
     }
 
     try {
-      const media = await sock.downloadMediaMessage(quoted);
+      // Get the media message
+      const mediaMessage = quoted.imageMessage;
       
-      await sock.updateProfilePicture(chatId, media);
+      // Download using Baileys method
+      const stream = await sock.downloadMediaMessage(quoted);
+      
+      // Update profile picture
+      await sock.updateProfilePicture(chatId, stream);
       
       await sock.sendMessage(chatId, {
         text: `╭━━━〔 ✅ PP UPDATED 〕━━━┈⊷

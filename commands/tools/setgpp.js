@@ -32,9 +32,11 @@ export default {
     }
 
     try {
-      const media = await sock.downloadMediaMessage(quoted);
+      // Download using Baileys method
+      const stream = await sock.downloadMediaMessage(quoted);
       
-      await sock.updateProfilePicture(chatId, media);
+      // Update group profile picture
+      await sock.updateProfilePicture(chatId, stream);
       
       await sock.sendMessage(chatId, {
         text: `╭━━━〔 ✅ GROUP PP UPDATED 〕━━━┈⊷
