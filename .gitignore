@@ -1,35 +1,82 @@
-# Node modules
-node_modules/
+# ============================================================
+#  🔒 HIDDEN FILES - NOT ON GITHUB
+# ============================================================
 
-# Session files
-session/
+# ─── Environment & Secrets ───
+.env
+.env.local
+.env.*.local
+config.env
+*.key
+*.pem
+*.crt
 
-# JSON config files (except package.json and package-lock.json)
-*.json
-!package.json
-!package-lock.json
-
-# Specific JSON files to ignore (alternative approach)
-antiviewonce_config.json
-auto_join_log.json
-owner.json
-
-# Data directory
-data/
-
-# Optional: OS files
-.DS_Store
-Thumbs.db
-
-# Optional: IDE files
-.vscode/
-.idea/pairing-web.js
-pairing-sessions/
-pairing.html
-public/
+# ─── Session & Auth ───
 session/
 creds.json
-session/
-*.json
-.env
+auth_info/
+*.session
+*.session.json
+
+# ─── Commands (All hidden) ───
 commands/
+
+# ─── Data & Logs ───
+data/
+logs/
+*.log
+*.csv
+*.db
+*.sqlite
+
+# ─── Temporary Files ───
+tmp/
+temp/
+*.tmp
+*.swp
+*.swo
+*~
+
+# ─── Node Modules ───
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# ─── System Files ───
+.DS_Store
+Thumbs.db
+desktop.ini
+*.exe
+*.dll
+*.so
+
+# ─── IDE & Editor ───
+.vscode/
+.idea/
+*.iml
+*.sublime-*
+
+# ─── Backup Files ───
+*.bak
+*.backup
+*.old
+*.orig
+
+# ─── Deployment ───
+*.zip
+*.tar.gz
+*.rar
+
+# ─── Testing ───
+coverage/
+.nyc_output/
+*.test.js
+*.spec.js
+
+# ─── Misc ───
+*.pid
+*.seed
+*.lock
