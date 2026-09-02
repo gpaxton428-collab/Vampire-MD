@@ -1,1 +1,0 @@
-export default { name: 'backup', description: 'Backup bot data', category: 'owner', aliases: ['save'], async execute(sock, msg, args) { const chatId = msg.key.remoteJid; await sock.sendMessage(chatId, { text: '💾 Backup completed!\n\n> *Powered by Vampire Tech*' }, { quoted: msg }); } };

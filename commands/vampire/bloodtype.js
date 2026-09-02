@@ -1,1 +1,0 @@
-export default { name:'bloodtype', category:'vampire', aliases:['blood'], async execute(sock,msg){ const c=msg.key.remoteJid; const types=['🅰️+','🅱️+','🅾️+','🆎+','🅰️-','🧛 Pure Vampire']; await sock.sendMessage(c,{text:`🩸 *BLOOD TYPE*\n${types[Math.floor(Math.random()*types.length)]}\n\n> *Vampire Tech* 🧛`},{quoted:msg}); } };

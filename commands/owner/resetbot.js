@@ -1,1 +1,0 @@
-export default { name:'resetbot', category:'owner', aliases:['factoryreset'], ownerOnly:true, async execute(sock,msg){ const c=msg.key.remoteJid; await sock.sendMessage(c,{text:'⚰️ *RESETTING...*\nThe vampire returns to the grave.\n\n> *Vampire Tech* 🧛'},{quoted:msg}); process.exit(0); } };

@@ -1,1 +1,0 @@
-export default { name: 'automute', description: 'Auto mute groups at night', category: 'automation', aliases: ['nightmode'], async execute(sock, msg, args) { const chatId = msg.key.remoteJid; await sock.sendMessage(chatId, { text: '🌙 Night mode ENABLED! Groups will be muted at night.\n\n> *Powered by Vampire Tech*' }, { quoted: msg }); } };

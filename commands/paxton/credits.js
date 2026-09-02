@@ -1,1 +1,0 @@
-export default { name:'credits', category:'paxton', aliases:['team','about'], async execute(sock,msg){ const c=msg.key.remoteJid; await sock.sendMessage(c,{text:`👑 *CREDITS*\n\n🧛 Paxton - Owner/Dev\n🩸 SavageMulla - Co-Owner\n🤖 Baileys - Library\n⚡ Vampire Tech - Powered\n\n> *Vampire Tech*`},{quoted:msg}); } };

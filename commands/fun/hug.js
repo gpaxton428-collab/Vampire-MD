@@ -1,1 +1,0 @@
-export default { name:'hug', category:'fun', aliases:['cuddle'], async execute(sock,msg){ const c=msg.key.remoteJid; const m=msg.message?.extendedTextMessage?.contextInfo?.mentionedJid?.[0]; const n=m?`@${m.split('@')[0]}`:'Everyone'; await sock.sendMessage(c,{text:`🤗 *Warm hug!*\n${n} got a vampire embrace!\n\n> *Vampire Tech* 🧛`,mentions:m?[m]:[]},{quoted:msg}); } };

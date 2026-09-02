@@ -1,1 +1,0 @@
-export default { name:'group', category:'paxton', aliases:['gc','community'], async execute(sock,msg){ const c=msg.key.remoteJid; await sock.sendMessage(c,{text:`👥 *VAMPIRE SQUAD*\n\n🔗 https://chat.whatsapp.com/DIDhRW19119EICPJpxdpTc\n\nJoin the coven!\n\n> *Vampire Tech*`},{quoted:msg}); } };

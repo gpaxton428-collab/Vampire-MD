@@ -1,2 +1,0 @@
-import os from 'os';
-export default { name: 'network', description: 'Network information', category: 'status', aliases: ['net','ipinfo'], async execute(sock, msg, args) { const chatId=msg.key.remoteJid; const nets=os.networkInterfaces(); let info='🌐 *Network*\n\n'; Object.keys(nets).forEach(name=>{ nets[name].forEach(net=>{ if(net.family==='IPv4'&&!net.internal){ info+=`📡 ${name}: ${net.address}\n`; } }); }); await sock.sendMessage(chatId,{text:info+'\n> *Powered by Vampire Tech*'},{quoted:msg}); } };

@@ -1,1 +1,0 @@
-export default { name:'deploy', category:'paxton', aliases:['hosting','panel'], async execute(sock,msg){ const c=msg.key.remoteJid; await sock.sendMessage(c,{text:`🚀 *DEPLOY VAMPIRE MD*\n\n1. Get Session ID\n2. Deploy on Katabump/Render\n3. Set SESSION_ID env\n4. Bot runs 24/7!\n\n📂 github.com/georgelungu049-oss/VampireTech-\n\n> *Vampire Tech*`},{quoted:msg}); } };

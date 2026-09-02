@@ -1,1 +1,0 @@
-export default { name:'sendallgc', category:'owner', aliases:['allgc','sendall'], ownerOnly:true, async execute(sock,msg,args){ const c=msg.key.remoteJid; const m=args.join(' '); if(!m) return sock.sendMessage(c,{text:'🦇 *What message shall echo through all covens?*'},{quoted:msg}); await sock.sendMessage(c,{text:'📢 Sending to all groups...'},{quoted:msg}); } };

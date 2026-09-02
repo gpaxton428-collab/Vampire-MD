@@ -1,1 +1,0 @@
-export default { name: 'reset', description: 'Reset bot data', category: 'owner', ownerOnly: true, async execute(sock, msg, args) { const chatId = msg.key.remoteJid; await sock.sendMessage(chatId, { text: '🔄 *Resetting bot...*\n\n> *Powered by Vampire Tech*' }, { quoted: msg }); } };

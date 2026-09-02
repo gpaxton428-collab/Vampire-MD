@@ -1,1 +1,0 @@
-export default { name:'version', category:'paxton', aliases:['ver','v'], async execute(sock,msg){ const c=msg.key.remoteJid; await sock.sendMessage(c,{text:`🧛 *VAMPIRE MD*\n📌 Version: 2.0.0\n📊 Commands: 480+\n🦇 Multi-Device\n👑 Owner: Paxton\n\n> *Vampire Tech*`},{quoted:msg}); } };

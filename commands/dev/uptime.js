@@ -1,1 +1,0 @@
-export default { name: 'uptime', description: 'Show bot uptime', category: 'dev', async execute(sock, msg, args) { const u=process.uptime(); const h=Math.floor(u/3600); const m=Math.floor((u%3600)/60); const s=Math.floor(u%60); await sock.sendMessage(msg.key.remoteJid,{text:`⏰ Uptime: ${h}h ${m}m ${s}s\n\n> *Powered by Vampire Tech*`},{quoted:msg}); } };

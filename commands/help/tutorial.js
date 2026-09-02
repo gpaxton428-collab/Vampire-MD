@@ -1,1 +1,0 @@
-export default { name: 'tutorial', description: 'How to use the bot', category: 'help', async execute(sock, msg, args) { await sock.sendMessage(msg.key.remoteJid,{text:`🎓 *TUTORIAL*\n\n1. Type .menu\n2. Choose a command\n3. Follow instructions\n4. Have fun!\n\n> *Powered by Vampire Tech*`},{quoted:msg}); } };

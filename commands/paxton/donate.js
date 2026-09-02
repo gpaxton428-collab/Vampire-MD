@@ -1,1 +1,0 @@
-export default { name:'donate', category:'paxton', aliases:['sponsor','supportus'], async execute(sock,msg){ const c=msg.key.remoteJid; await sock.sendMessage(c,{text:`💎 *SUPPORT US*\n\n⭐ Star our repo\n🍴 Fork & share\n📢 Join channel\n👥 Join group\n💬 Tell friends\n\nEvery bit helps the darkness grow!\n\n> *Vampire Tech*`},{quoted:msg}); } };

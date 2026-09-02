@@ -1,1 +1,0 @@
-export default { name: 'autoforward', description: 'Auto forward messages', category: 'automation', aliases: ['autofwd'], async execute(sock, msg, args) { const chatId = msg.key.remoteJid; await sock.sendMessage(chatId, { text: '↗️ Auto-forward ENABLED!\n\n> *Powered by Vampire Tech*' }, { quoted: msg }); } };

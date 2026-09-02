@@ -1,17 +1,29 @@
 services:
   - type: web
-    name: vampire-md
+    name: vampiretech-md
     env: node
+    plan: free
     buildCommand: npm install
-    startCommand: node index.js
+    startCommand: node --no-warnings --experimental-global-webcrypto index.js
+    healthCheckPath: /
+    autoDeploy: true
     envVars:
-      - key: NODE_VERSION
-        value: 18.x
-      - key: AUTO_LOGIN
-        value: "true"
+      - key: NODE_ENV
+        value: production
       - key: BOT_NAME
         value: Vampire MD
       - key: PREFIX
-        value: "."
+        value: .
       - key: SESSION_ID
-        value: "your-session-id-here"
+        value: 
+        sync: false
+      - key: AUTO_VIEW_STATUS
+        value: true
+      - key: AUTO_REACT
+        value: false
+      - key: PRESENCE
+        value: true
+      - key: RATE_LIMIT
+        value: true
+      - key: BOT_MODE
+        value: public

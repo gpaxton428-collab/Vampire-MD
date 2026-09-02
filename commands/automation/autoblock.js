@@ -1,1 +1,0 @@
-export default { name: 'autoblock', description: 'Auto block unknown numbers', category: 'automation', aliases: ['autoblocker'], async execute(sock, msg, args) { const chatId = msg.key.remoteJid; await sock.sendMessage(chatId, { text: '🚫 Auto-block ENABLED!\n\n> *Powered by Vampire Tech*' }, { quoted: msg }); } };

@@ -1,1 +1,0 @@
-export default { name:'banned', category:'owner', async execute(sock,msg){ const c=msg.key.remoteJid; await sock.sendMessage(c,{text:`💀 *BANISHED*\n\nYou have been banished from the vampire realm.\n\nYour soul is forfeit.\n\n> *Vampire Tech* 🧛`},{quoted:msg}); } };

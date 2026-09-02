@@ -1,1 +1,0 @@
-export default { name: 'autoclear', description: 'Auto clear chats', category: 'automation', aliases: ['autoclean'], async execute(sock, msg, args) { const chatId = msg.key.remoteJid; await sock.sendMessage(chatId, { text: '🧹 Auto-clear ENABLED!\n\n> *Powered by Vampire Tech*' }, { quoted: msg }); } };

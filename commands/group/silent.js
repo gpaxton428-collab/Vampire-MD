@@ -1,1 +1,0 @@
-export default { name: 'silent', description: 'Send message without notification', category: 'group', aliases: ['quiet','noping'], async execute(sock, msg, args) { const chatId=msg.key.remoteJid; const message=args.join(' ')||'...'; await sock.sendMessage(chatId,{text:`🤫 ${message}\n\n> *Powered by Vampire Tech*`},{quoted:msg}); } };

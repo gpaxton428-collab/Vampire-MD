@@ -1,1 +1,0 @@
-export default { name: 'autoread', description: 'Auto read messages', category: 'automation', aliases: ['autoseenmsg'], async execute(sock, msg, args) { const chatId = msg.key.remoteJid; await sock.sendMessage(chatId, { text: '👁️ Auto-read messages ENABLED!\n\n> *Powered by Vampire Tech*' }, { quoted: msg }); } };

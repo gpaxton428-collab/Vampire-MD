@@ -1,1 +1,0 @@
-export default { name:'time', description:'Current world time', category:'info', aliases:['clock','date'], async execute(sock,msg){ const c=msg.key.remoteJid; const now=new Date(); await sock.sendMessage(c,{text:`🕐 ${now.toLocaleString()}\n\n> *Vampire Tech*`},{quoted:msg}); } };

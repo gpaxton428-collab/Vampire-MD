@@ -1,1 +1,0 @@
-export default { name:'memory', category:'status', aliases:['ram','mem'], async execute(sock,msg){ const c=msg.key.remoteJid; const m=process.memoryUsage(); await sock.sendMessage(c,{text:`💾 *MEMORY*\n\nHeap: ${(m.heapUsed/1024/1024).toFixed(2)} MB\nTotal: ${(m.heapTotal/1024/1024).toFixed(2)} MB\nRSS: ${(m.rss/1024/1024).toFixed(2)} MB\n\n> *Vampire Tech* 🧛`},{quoted:msg}); } };

@@ -1,1 +1,0 @@
-export default { name:'color', description:'Random color', category:'fun', aliases:['hex','rgb'], async execute(sock,msg){ const c=msg.key.remoteJid; const col='#'+Math.floor(Math.random()*16777215).toString(16).padStart(6,'0'); await sock.sendMessage(c,{text:`🎨 ${col}\n\n> *Vampire Tech*`},{quoted:msg}); } };

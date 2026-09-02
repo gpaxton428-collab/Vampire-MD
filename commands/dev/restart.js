@@ -1,1 +1,0 @@
-export default { name: 'restart', description: 'Restart the bot', category: 'dev', ownerOnly: true, async execute(sock, msg, args) { await sock.sendMessage(msg.key.remoteJid,{text:'🔄 Restarting...\n\n> *Powered by Vampire Tech*'},{quoted:msg}); process.exit(0); } };

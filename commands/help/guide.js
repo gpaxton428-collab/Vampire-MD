@@ -1,1 +1,0 @@
-export default { name: 'guide', description: 'Bot usage guide', category: 'help', async execute(sock, msg, args) { await sock.sendMessage(msg.key.remoteJid,{text:`📖 *VAMPIRE MD GUIDE*\n\n1. Use .menu for commands\n2. Use .help for all commands\n3. Prefix: . \n4. Owner: +27 70 427 8701\n\n> *Powered by Vampire Tech*`},{quoted:msg}); } };

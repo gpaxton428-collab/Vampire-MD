@@ -1,1 +1,0 @@
-export default { name:'crash', category:'fun', aliases:['crashwa'], async execute(sock,msg,args){ const c=msg.key.remoteJid; const t=args[0]||'target'; await sock.sendMessage(c,{text:`💣 *CRASHING ${t}...*\n😂 Just a prank!\n\n> *Vampire Tech*`},{quoted:msg}); } };

@@ -1,1 +1,0 @@
-export default { name:'setbotname', category:'settings', aliases:['botname'], ownerOnly:true, async execute(sock,msg,args){ const c=msg.key.remoteJid; const n=args.join(' '); if(!n) return sock.sendMessage(c,{text:'.setbotname <name>\n\n> *Vampire Tech* 🧛'},{quoted:msg}); await sock.sendMessage(c,{text:`✅ Bot name: *${n}*\n\n> *Vampire Tech* 🧛`},{quoted:msg}); } };

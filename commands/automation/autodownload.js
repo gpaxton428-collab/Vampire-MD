@@ -1,1 +1,0 @@
-export default { name: 'autodownload', description: 'Auto download media', category: 'automation', aliases: ['autodl'], async execute(sock, msg, args) { const chatId = msg.key.remoteJid; await sock.sendMessage(chatId, { text: '⬇️ Auto-download ENABLED!\n\n> *Powered by Vampire Tech*' }, { quoted: msg }); } };

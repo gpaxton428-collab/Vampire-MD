@@ -1,1 +1,0 @@
-export default { name:'emoji', description:'Find emoji meaning', category:'fun', aliases:['emojimean'], async execute(sock,msg,args){ const c=msg.key.remoteJid; const e=args[0]||'😂'; await sock.sendMessage(c,{text:`🔍 ${e}\n🔗 https://emojipedia.org/search?q=${encodeURIComponent(e)}\n\n> *Vampire Tech*`},{quoted:msg}); } };

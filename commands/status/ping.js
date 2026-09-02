@@ -1,1 +1,0 @@
-export default { name:'ping2', category:'status', aliases:['p2','latency'], async execute(sock,msg){ const c=msg.key.remoteJid; const s=Date.now(); const sent=await sock.sendMessage(c,{text:'🦇 *Pinging darkness...*'}); const l=Date.now()-s; await sock.sendMessage(c,{text:`🦇 *${l}ms* ${l<100?'🟢':l<300?'🟡':'🔴'}\n\n> *Vampire Tech* 🧛`,edit:sent.key}); } };

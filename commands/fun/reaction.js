@@ -1,1 +1,0 @@
-export default { name:'reaction', description:'Random reaction GIF', category:'fun', aliases:['react','gif'], async execute(sock,msg,args){ const c=msg.key.remoteJid; const q=args.join(' ')||'vampire'; await sock.sendMessage(c,{text:`🎬 Reaction GIF: ${q}\n🔗 https://tenor.com/search/${encodeURIComponent(q)}-gifs\n\n> *Vampire Tech*`},{quoted:msg}); } };

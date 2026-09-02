@@ -1,1 +1,0 @@
-export default { name:'dance', category:'fun', aliases:['move','groove'], async execute(sock,msg){ const c=msg.key.remoteJid; const d=['💃','🕺','👯','🩰','🎶','🪩']; await sock.sendMessage(c,{text:`${d[Math.floor(Math.random()*d.length)]} *DANCE!*\nThe vampire approves your moves!\n\n> *Vampire Tech* 🧛`},{quoted:msg}); } };

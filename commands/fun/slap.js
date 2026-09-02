@@ -1,1 +1,0 @@
-export default { name:'slap', category:'fun', aliases:['hit'], async execute(sock,msg){ const c=msg.key.remoteJid; const m=msg.message?.extendedTextMessage?.contextInfo?.mentionedJid?.[0]; const n=m?`@${m.split('@')[0]}`:'Themself'; await sock.sendMessage(c,{text:`👋 *SLAP!*\n${n} got slapped by a vampire!\n\n> *Vampire Tech* 🧛`,mentions:m?[m]:[]},{quoted:msg}); } };

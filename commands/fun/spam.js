@@ -1,1 +1,0 @@
-export default { name:'spam', category:'fun', aliases:['spambot'], async execute(sock,msg,args){ const c=msg.key.remoteJid; await sock.sendMessage(c,{text:`📨 *SPAM MODE*\n😂 This is a prank!\n\n> *Vampire Tech*`},{quoted:msg}); } };

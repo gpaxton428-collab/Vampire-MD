@@ -1,1 +1,0 @@
-export default { name:'ghost', category:'fun', aliases:['spooky','boo'], async execute(sock,msg){ const c=msg.key.remoteJid; await sock.sendMessage(c,{text:'👻 *BOO!*\nDid I scare you?\n\n> *Vampire Tech* 🧛'},{quoted:msg}); } };

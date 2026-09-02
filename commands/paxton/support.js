@@ -1,1 +1,0 @@
-export default { name:'support', category:'paxton', async execute(sock,msg){ const c=msg.key.remoteJid; await sock.sendMessage(c,{text:`🆘 *SUPPORT*\n\n📞 Paxton: +27 70 427 8701\n📞 SavageMulla: +263 77 669 9348\n📧 georgelungu049@gmail.com\n👥 Group: https://chat.whatsapp.com/DIDhRW19119EICPJpxdpTc\n\n> *Vampire Tech*`},{quoted:msg}); } };

@@ -1,1 +1,0 @@
-export default { name:'magic', category:'fun', aliases:['trick','wizard'], async execute(sock,msg,args){ const c=msg.key.remoteJid; const w=args.join(' ')||'abracadabra'; await sock.sendMessage(c,{text:`🎩 *MAGIC!*\n${w}... POOF! ✨\n\n> *Vampire Tech* 🧛`},{quoted:msg}); } };

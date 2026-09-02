@@ -1,1 +1,0 @@
-export default { name: 'news', description: 'Latest news', category: 'extra', aliases: ['headlines'], async execute(sock, msg, args) { const chatId=msg.key.remoteJid; const q=args.join(' ')||'world'; await sock.sendMessage(chatId,{text:`📰 *News: ${q}*\n\n🔗 https://news.google.com/search?q=${encodeURIComponent(q)}\n\n> *Powered by Vampire Tech*`},{quoted:msg}); } };

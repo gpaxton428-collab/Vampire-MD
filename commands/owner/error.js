@@ -1,1 +1,0 @@
-export default { name:'error', category:'owner', async execute(sock,msg){ const c=msg.key.remoteJid; await sock.sendMessage(c,{text:`💀 *DARKNESS CONSUMES*\n\nAn error occurred in the shadows.\n\nThe vampires are working to fix it.\n\n> *Vampire Tech* 🧛`},{quoted:msg}); } };

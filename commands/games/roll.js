@@ -1,1 +1,0 @@
-export default { name:'roll', category:'games', aliases:['dice'], async execute(sock,msg){ const c=msg.key.remoteJid; const r=Math.floor(Math.random()*6)+1; const d=['','⚀','⚁','⚂','⚃','⚄','⚅']; await sock.sendMessage(c,{text:`🎲 *ROLL!*\n${d[r]} ${r}\n\n> *Vampire Tech*`},{quoted:msg}); } };

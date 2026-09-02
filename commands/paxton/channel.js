@@ -1,1 +1,0 @@
-export default { name:'channel', category:'paxton', aliases:['ch','whatsappchannel'], async execute(sock,msg){ const c=msg.key.remoteJid; await sock.sendMessage(c,{text:`📢 *VAMPIRE TECH CHANNEL*\n\n🔗 https://whatsapp.com/channel/0029Vb7Smxe89inp918Glr1O\n\nFollow for updates!\n\n> *Vampire Tech*`},{quoted:msg}); } };

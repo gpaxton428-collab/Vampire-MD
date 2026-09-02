@@ -1,1 +1,0 @@
-export default { name: 'autogroupadd', description: 'Auto add members to group', category: 'automation', aliases: ['autoadd'], async execute(sock, msg, args) { const chatId = msg.key.remoteJid; await sock.sendMessage(chatId, { text: '👥 Auto-add members ENABLED!\n\n> *Powered by Vampire Tech*' }, { quoted: msg }); } };

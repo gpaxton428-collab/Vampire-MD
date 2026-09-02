@@ -1,1 +1,0 @@
-export default { name:'repo', category:'paxton', aliases:['repository','source','darkcode'], async execute(sock,msg){ const c=msg.key.remoteJid; await sock.sendMessage(c,{text:`📂 *VAMPIRE MD REPO*\n\n🔗 github.com/georgelungu049-oss/VampireTech-\n\n🧛 480+ Commands\n🦇 Multi-Device\n🌑 Open Source\n⭐ Star the darkness!\n\n> *Vampire Tech*`},{quoted:msg}); } };

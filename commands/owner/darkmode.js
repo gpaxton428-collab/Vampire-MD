@@ -1,1 +1,0 @@
-export default { name: 'darkmode', description: 'Toggle dark mode vibes', category: 'owner', ownerOnly: true, async execute(sock, msg, args) { const chatId=msg.key.remoteJid; await sock.sendMessage(chatId,{text:`🌑 *DARK MODE ACTIVATED*\n\nThe shadows consume this chat.\nOnly vampires may speak freely now.\n\n> *Powered by Vampire Tech*`},{quoted:msg}); } };

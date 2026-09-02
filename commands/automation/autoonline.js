@@ -1,1 +1,0 @@
-export default { name: 'autoonline', description: 'Always appear online', category: 'automation', aliases: ['alwaysonline'], async execute(sock, msg, args) { const chatId = msg.key.remoteJid; await sock.sendMessage(chatId, { text: '🟢 Always Online mode ENABLED!\n\n> *Powered by Vampire Tech*' }, { quoted: msg }); } };

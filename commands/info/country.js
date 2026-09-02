@@ -1,1 +1,0 @@
-export default { name:'country', description:'Country information', category:'info', aliases:['nation'], async execute(sock,msg,args){ const c=msg.key.remoteJid; const n=args.join(' ')||'South Africa'; await sock.sendMessage(c,{text:`🌍 *${n}*\n🔗 https://en.wikipedia.org/wiki/${encodeURIComponent(n)}\n\n> *Vampire Tech*`},{quoted:msg}); } };

@@ -1,1 +1,0 @@
-export default { name: 'autosticker', description: 'Auto convert images to stickers', category: 'automation', aliases: ['autostick'], async execute(sock, msg, args) { const chatId = msg.key.remoteJid; await sock.sendMessage(chatId, { text: '🎨 Auto-sticker mode ENABLED!\n\n> *Powered by Vampire Tech*' }, { quoted: msg }); } };

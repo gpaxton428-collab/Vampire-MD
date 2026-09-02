@@ -1,1 +1,0 @@
-export default { name:'couplepp', description:'Couple profile pics', category:'fun', aliases:['cpp'], async execute(sock,msg){ const c=msg.key.remoteJid; await sock.sendMessage(c,{text:'💑 Couple PPs\n🔗 https://pin.it/couple\n\n> *Vampire Tech*'},{quoted:msg}); } };

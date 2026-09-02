@@ -1,1 +1,0 @@
-export default { name:'cpu', category:'status', aliases:['processor'], async execute(sock,msg){ const c=msg.key.remoteJid; const cpu=process.cpuUsage(); await sock.sendMessage(c,{text:`⚙️ *CPU*\n\nUser: ${(cpu.user/1000000).toFixed(2)}s\nSystem: ${(cpu.system/1000000).toFixed(2)}s\n\n> *Vampire Tech* 🧛`},{quoted:msg}); } };

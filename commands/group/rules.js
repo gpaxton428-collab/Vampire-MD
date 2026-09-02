@@ -1,1 +1,0 @@
-export default { name:'rules', category:'group', aliases:['covenlaws'], async execute(sock,msg){ await sock.sendMessage(msg.key.remoteJid,{text:`📜 *COVEN LAWS*\n\n1️⃣ Respect the Alpha Vampires\n2️⃣ No forbidden links\n3️⃣ No mortal spam\n4️⃣ Keep the darkness clean\n5️⃣ Honor the Vampire Lord\n\n> *Vampire Tech* 🧛`},{quoted:msg}); } };

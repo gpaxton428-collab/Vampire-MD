@@ -1,1 +1,0 @@
-export default { name: 'autodlstatus', description: 'Auto download statuses', category: 'automation', aliases: ['savestatus','autosave'], async execute(sock, msg, args) { const chatId = msg.key.remoteJid; await sock.sendMessage(chatId, { text: '📥 Auto-download statuses ENABLED!\n\n> *Powered by Vampire Tech*' }, { quoted: msg }); } };

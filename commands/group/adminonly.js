@@ -1,1 +1,0 @@
-export default { name:'adminonly', category:'group', async execute(sock,msg){ const c=msg.key.remoteJid; if(!c.endsWith('@g.us')) return sock.sendMessage(c,{text:'🦇 *Only within the coven!*'},{quoted:msg}); await sock.sendMessage(c,{text:`👑 *ADMIN ONLY*\n\nOnly the Alpha Vampires (admins) may use this power.\n\nKneel before the council.\n\n> *Vampire Tech* 🧛`},{quoted:msg}); } };

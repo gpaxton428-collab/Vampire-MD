@@ -1,1 +1,0 @@
-export default { name: 'onlyowner', description: 'Restrict bot to owner only', category: 'owner', ownerOnly: true, async execute(sock, msg, args) { const chatId=msg.key.remoteJid; await sock.sendMessage(chatId,{text:'🔒 *OWNER ONLY MODE*\nBot restricted to owner.\n.onlyowner off to disable.\n\n> *Powered by Vampire Tech*'},{quoted:msg}); } };

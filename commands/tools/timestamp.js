@@ -1,1 +1,0 @@
-export default { name: 'timestamp', description: 'Get current timestamp', category: 'tools', aliases: ['time', 'epoch'], async execute(sock, msg, args) { const chatId = msg.key.remoteJid; await sock.sendMessage(chatId, { text: `🕐 *Timestamp:* ${Date.now()}\n📅 *Date:* ${new Date().toISOString()}\n\n> *Powered by Vampire Tech*` }, { quoted: msg }); } };

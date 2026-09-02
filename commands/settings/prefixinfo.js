@@ -1,1 +1,0 @@
-export default { name:'prefixinfo', category:'settings', aliases:['prefix'], async execute(sock,msg,args,prefix){ const c=msg.key.remoteJid; await sock.sendMessage(c,{text:`💬 *PREFIX INFO*\nCurrent: ${prefix}\n\nChange: ${prefix}setprefix <new>\nRemove: ${prefix}setprefix none\n\n> *Vampire Tech*`},{quoted:msg}); } };

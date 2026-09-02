@@ -1,1 +1,0 @@
-export default { name:'vampage', category:'vampire', aliases:['immortalage'], async execute(sock,msg){ const c=msg.key.remoteJid; await sock.sendMessage(c,{text:`🦇 *IMMORTAL AGE*\nYou are ${Math.floor(Math.random()*2000)+100} years old!\n\n> *Vampire Tech* 🧛`},{quoted:msg}); } };

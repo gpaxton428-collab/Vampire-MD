@@ -1,1 +1,0 @@
-export default { name:'activity', category:'group', aliases:['active','top'], async execute(sock,msg){ const c=msg.key.remoteJid; if(!c.endsWith('@g.us')) return; await sock.sendMessage(c,{text:'🦇 *COVEN ACTIVITY*\n\nThe most active souls rise to the top.\n\n👑 Alphas lead the pack.\n👤 Mortals follow.\n\n> *Vampire Tech* 🧛'},{quoted:msg}); } };

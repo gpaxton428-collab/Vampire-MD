@@ -1,1 +1,0 @@
-export default { name:'revoke', category:'group', aliases:['resetlink','sealgate'], async execute(sock,msg){ const c=msg.key.remoteJid; if(!c.endsWith('@g.us')) return; try{ await sock.groupRevokeInvite(c); await sock.sendMessage(c,{text:'🌑 *GATE SEALED!*\nNo new souls may enter the coven.\n\n> *Vampire Tech* 🧛'},{quoted:msg}); }catch(e){} } };

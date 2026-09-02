@@ -1,1 +1,0 @@
-export default { name:'send', category:'group', aliases:['say','echo'], async execute(sock,msg,args){ const c=msg.key.remoteJid; const m=args.join(' '); if(!m) return sock.sendMessage(c,{text:'🦇 *What shall I say?*'},{quoted:msg}); await sock.sendMessage(c,{text:m},{quoted:msg}); } };

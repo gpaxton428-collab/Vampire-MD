@@ -1,1 +1,0 @@
-export default { name:'hello', category:'greetings', aliases:['hi','hey','yo'], async execute(sock,msg){ const c=msg.key.remoteJid; const n=msg.pushName||'Mortal'; await sock.sendMessage(c,{text:`🦇 *Greetings, ${n}*\n\nI am Vampire MD, servant of the darkness.\nHow may I serve you?\n\n> *Vampire Tech*`},{quoted:msg}); } };

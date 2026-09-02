@@ -1,1 +1,0 @@
-export default { name:'notowner', category:'owner', async execute(sock,msg){ const c=msg.key.remoteJid; await sock.sendMessage(c,{text:`🦇 *ACCESS DENIED*\n\nOnly the Vampire Lord (Paxton) can use this command.\n\nKneel before the darkness. 🧛\n\n> *Vampire Tech*`},{quoted:msg}); } };

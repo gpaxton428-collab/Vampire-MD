@@ -1,1 +1,0 @@
-export default { name:'goodmorning', category:'greetings', aliases:['gm','morning'], async execute(sock,msg){ const c=msg.key.remoteJid; const n=msg.pushName||'Mortal'; await sock.sendMessage(c,{text:`🌅 *Good Morning ${n}*\n\nThe sun rises but darkness lingers.\nHave a powerful day!\n\n— 🧛 Vampire Lord\n\n> *Vampire Tech*`},{quoted:msg}); } };

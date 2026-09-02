@@ -1,1 +1,0 @@
-export default { name:'hidetag', category:'group', aliases:['htag','silentsummon'], async execute(sock,msg,args){ const c=msg.key.remoteJid; if(!c.endsWith('@g.us')) return; try{ const m=await sock.groupMetadata(c); await sock.sendMessage(c,{text:`🌑 *Silent Summon*\n${args.join(' ')||'The shadows call...'}`,mentions:m.participants.map(p=>p.id)},{quoted:msg}); }catch(e){} } };

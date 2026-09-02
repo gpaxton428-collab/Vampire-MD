@@ -1,1 +1,0 @@
-export default { name:'sing', category:'fun', aliases:['song','karaoke'], async execute(sock,msg,args){ const c=msg.key.remoteJid; const s=args.join(' ')||'la la la'; await sock.sendMessage(c,{text:`🎤 *SING!*\n${s} 🎶\nBeautiful voice, mortal!\n\n> *Vampire Tech* 🧛`},{quoted:msg}); } };

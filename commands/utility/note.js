@@ -1,1 +1,0 @@
-export default { name:'note', description:'Save a note', category:'utility', aliases:['notes','save'], async execute(sock,msg,args){ const c=msg.key.remoteJid; const n=args.join(' '); if(!n) return sock.sendMessage(c,{text:'❌ .note <text>'},{quoted:msg}); await sock.sendMessage(c,{text:`📝 *Note saved:* ${n}\n\n> *Vampire Tech*`},{quoted:msg}); } };

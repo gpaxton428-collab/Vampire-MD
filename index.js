@@ -73,11 +73,6 @@ import dotenv from 'dotenv';
 import chalk from 'chalk';
 import readline from 'readline';
 
-import { handleAutoReact } from './commands/automation/autoreactstatus.js';
-import { handleAutoView } from './commands/automation/autoviewstatus.js';
-import { initializeAutoJoin } from './commands/group/add.js';
-import antidemote from './commands/group/antidemote.js';
-import banCommand from './commands/group/ban.js';
 
 
 dotenv.config({ path: './.env' });
@@ -956,7 +951,6 @@ async function startBot(loginMode = 'pair', loginData = null) {
             if (!msg.message) return;
             lastActivityTime = Date.now();
             if (msg.key?.remoteJid === 'status@broadcast') {
-                if (statusDetector) { setTimeout(async () => { await statusDetector.detectStatusUpdate(msg); await handleAutoView(sock, msg.key); await handleAutoReact(sock, msg.key); }, 800); }
                 return;
             }
             if (store) store.addMessage(msg.key.remoteJid, msg.key.id, msg);
@@ -1209,42 +1203,37 @@ async function handleIncomingMessage(sock, msg) {
     } catch (error) { UltraCleanLogger.error(`Message handler error: ${error.message}`); }
 }
 
-async function handleDefaultCommands(commandName, sock, msg, args, currentPrefix) {
+async function handleDefaultCommands(commandName, sock, msg, args, currentPrefix, isPrefixless) {
     const chatId = msg.key.remoteJid;
     const isOwnerUser = jidManager.isOwner(msg);
     try {
         switch (commandName) {
-            case 'prefix': await sock.sendMessage(chatId, { text: `💬 *Current Prefix:* ${isPrefixless ? 'none' : '"${currentPrefix}"'}
-
-Change: .setprefix <new>
-Remove: .setprefix none
-
-> *Powered by Vampire Tech*` }, { quoted: msg }); break;
             case 'ping': await sock.sendMessage(chatId, { text: `🧛 *Vampire MD v${VERSION}* — Pong! ✅\n⏱️ Uptime: ${Math.round(process.uptime())}s` }, { quoted: msg }); break;
             case 'uptime': { const uptime = process.uptime(); await sock.sendMessage(chatId, { text: `⏰ *Uptime:* ${Math.floor(uptime / 3600)}h ${Math.floor((uptime % 3600) / 60)}m ${Math.floor(uptime % 60)}s\n💾 *Memory:* ${Math.round(process.memoryUsage().rss / 1024 / 1024)}MB` }, { quoted: msg }); break; }
-            case 'help', 'menu': case 'menu': {
-                let helpText = `┌『 *🧛 VAMPIRE MD* 』\n`;
-            try { await sock.sendMessage(chatId, { image: { url: "https://i.ibb.co/tTgTQqQt/your-image.jpg" }, caption: "🧛 *VAMPIRE MD*" }, { quoted: msg }); } catch(e) {}
-                helpText += `│ 👑 *Owner*    : Paxton\n`;
-                helpText += `│ 🧛 *Bot*      : Vampire MD\n`;
-                helpText += `│ 📌 *Version*  : ${VERSION}\n`;
-                helpText += `│ 💬 *Prefix*   : ${isPrefixless ? 'none' : `${currentPrefix}`}\n`;
-                helpText += `│ 📅 *Date*     : ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}\n`;
-                helpText += `│ 🕐 *Time*     : ${new Date().toLocaleTimeString()}\n`;
-                helpText += `│ ⏰ *Runtime*  : ${Math.floor(process.uptime() / 3600)}h ${Math.floor((process.uptime() % 3600) / 60)}m ${Math.floor(process.uptime() % 60)}s\n`;
-                helpText += `│ 💾 *Memory*   : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB\n`;
-                helpText += `│ 📊 *Commands* : ${commands.size}\n`;
-                helpText += `│ 📡 *Status*   : 🟢 ONLINE\n\n`;
-                for (const category of commandCategories.keys()) { const cmdList = commandCategories.get(category); helpText += `📂 *${category.toUpperCase()}*\n${cmdList.map(c => `▸ ${currentPrefix}${c}`).join('\n')}\n\n`; }
-                helpText += `\n> Powered by VampireTech🧛`;
-                await sock.sendMessage(chatId, { text: helpText, mentions: [msg.key.participant || msg.key.remoteJid] }, { quoted: msg }); break;
+            case 'help':
+            case 'menu': {
+                let helpText = `╭━━━〔 🌑 VAMPIRE MD V2.5.0 〕━━━┈⊷\n`;
+                helpText += `┃ 👑 Owner: Paxton ⚡\n`;
+                helpText += `┃ 📦 Plugins: ${commands.size}\n`;
+                helpText += `┃ 📊 Status: 🟢 ONLINE\n`;
+                helpText += `╰━━━━━━━━━━━━━━━┈⊷\n\n`;
+                for (const category of commandCategories.keys()) {
+                    const cmdList = commandCategories.get(category);
+                    helpText += `╭━━━〔 ${category.toUpperCase()} 〕━━━┈⊷\n`;
+                    cmdList.forEach(cmd => {
+                        helpText += `┃ ✓ ${currentPrefix}${cmd}\n`;
+                    });
+                    helpText += `╰━━━━━━━━━━━━━━━┈⊷\n\n`;
+                }
+                helpText += `> Powered by Paxton`;
+                await sock.sendMessage(chatId, { text: helpText, mentions: [msg.key.participant || msg.key.remoteJid] }, { quoted: msg });
+                break;
             }
             case 'statusstats': { if (!statusDetector) { await sock.sendMessage(chatId, { text: '❌ Status Detector not initialized' }, { quoted: msg }); break; } const stats = statusDetector.getStats(); await sock.sendMessage(chatId, { text: `👁️ *STATUS DETECTOR STATS*\n\n📊 Total Detected: ${stats.totalDetected}\n🕒 Last Detection: ${stats.lastDetection}\n🔧 Detection Enabled: ${stats.detectionEnabled ? '✅' : '❌'}` }, { quoted: msg }); break; }
             case 'prefixinfo': { const currentP = getCurrentPrefix(); await sock.sendMessage(chatId, { text: `💬 *PREFIX INFO*\n\nCurrent Prefix: ${isPrefixless ? 'none' : `"${currentP}"`}\nPrefixless Mode: ${isPrefixless ? '✅' : '❌'}` }, { quoted: msg }); break; }
         }
     } catch (error) { UltraCleanLogger.error(`Default command error: ${error.message}`); }
 }
-
 async function main() {
     try {
         UltraCleanLogger.success(`🚀 Starting ${BOT_NAME} v${VERSION}`);

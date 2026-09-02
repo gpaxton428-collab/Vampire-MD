@@ -1,1 +1,0 @@
-export default { name:'grouponly', category:'group', aliases:['gconly'], async execute(sock,msg,args){ const c=msg.key.remoteJid; if(!c.endsWith('@g.us')) return sock.sendMessage(c,{text:'🦇 *This command only works in the shadows of a group!*'},{quoted:msg}); await sock.sendMessage(c,{text:'👥 *Group Only Mode Active!*\n\n> *Vampire Tech* 🧛'},{quoted:msg}); } };

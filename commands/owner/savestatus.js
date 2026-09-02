@@ -1,1 +1,0 @@
-export default { name: 'savestatus', description: 'Save someone status', category: 'owner', ownerOnly: true, async execute(sock, msg, args) { const chatId = msg.key.remoteJid; await sock.sendMessage(chatId, { text: '📥 Status saver active! Reply to a status to save it.\n\n> *Powered by Vampire Tech*' }, { quoted: msg }); } };

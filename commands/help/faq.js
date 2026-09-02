@@ -1,1 +1,0 @@
-export default { name: 'faq', description: 'Frequently asked questions', category: 'help', async execute(sock, msg, args) { await sock.sendMessage(msg.key.remoteJid,{text:`❓ *FAQ*\n\nQ: How to use bot?\nA: Type .menu\n\nQ: Who is owner?\nA: +27 70 427 8701\n\nQ: Can I deploy?\nA: Yes! GitHub repo\n\n> *Powered by Vampire Tech*`},{quoted:msg}); } };

@@ -1,1 +1,0 @@
-export default { name:'emojimix', category:'fun', aliases:['emix','mix'], async execute(sock,msg,args){ const c=msg.key.remoteJid; const e1=args[0]||'🧛'; const e2=args[1]||'🦇'; await sock.sendMessage(c,{text:`🎨 *EMOJI MIX*\n${e1} + ${e2} = 🧛🦇\n\n> *Vampire Tech*`},{quoted:msg}); } };

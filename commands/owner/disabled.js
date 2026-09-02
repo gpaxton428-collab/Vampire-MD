@@ -1,1 +1,0 @@
-export default { name:'disabled', category:'owner', async execute(sock,msg){ const c=msg.key.remoteJid; await sock.sendMessage(c,{text:`🦇 *DARKNESS SEALED*\n\nThis power has been sealed by the Vampire Lord.\n\nAwait the blood moon.\n\n> *Vampire Tech* 🧛`},{quoted:msg}); } };
