@@ -31,3 +31,5 @@ session/
 creds.json
 session/
 *.json
+.env
+commands/
