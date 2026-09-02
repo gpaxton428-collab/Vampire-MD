@@ -1,6 +1,6 @@
 export default {
   name: 'gemini',
-  description: 'Chat with Google Gemini 2.0 Flash',
+  description: 'Chat with Google Gemini 2.0 Flash (FREE)',
   category: 'ai',
   aliases: ['gemini2'],
   async execute(sock, msg, args, prefix) {
@@ -20,7 +20,7 @@ export default {
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY || 'YOUR_API_KEY'}`,
+          'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({

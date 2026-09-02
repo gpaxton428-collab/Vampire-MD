@@ -20,11 +20,11 @@ export default {
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY || 'YOUR_API_KEY'}`,
+          'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          model: 'google/gemini-2.0-flash-exp:free',
+          model: 'meta-llama/llama-3.3-70b-instruct:free',
           messages: [
             { role: 'system', content: `You are Isaac, a highly professional, intelligent, and articulate AI assistant. You provide clear, concise, and well-structured responses. You are knowledgeable in business, technology, education, and personal development. You speak with confidence and professionalism, always offering practical advice and solutions.` },
             { role: 'user', content: query }
