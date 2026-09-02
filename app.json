@@ -1,0 +1,92 @@
+{
+  "name": "VampireTech-MD",
+  "description": "Professional WhatsApp Bot with auto-session authentication",
+  "logo": "https://i.ibb.co/zWGkw7Jz/767022de0778.png",
+  "keywords": ["whatsapp", "bot", "vampire", "baileys", "session"],
+  "repository": "https://github.com/georgelungu049-oss/VampireTech-",
+  "scripts": {
+    "start": "node --no-warnings --experimental-global-webcrypto index.js"
+  },
+  "env": {
+    "BOT_NAME": {
+      "description": "Your bot name",
+      "value": "Vampire MD",
+      "required": false
+    },
+    "PREFIX": {
+      "description": "Command prefix (use 'none' for no prefix)",
+      "value": ".",
+      "required": false
+    },
+    "SESSION_ID": {
+      "description": "Your WhatsApp session ID",
+      "value": "",
+      "required": true
+    },
+    "DATABASE_URL": {
+      "description": "OPTIONAL: PostgreSQL connection string for persistent storage",
+      "value": "",
+      "required": false
+    },
+    "PTERODACTYL_KEY": {
+      "description": "OPTIONAL: Your Pterodactyl Application API key",
+      "value": "",
+      "required": false
+    },
+    "PTERODACTYL_URL": {
+      "description": "OPTIONAL: Your Pterodactyl panel URL",
+      "value": "",
+      "required": false
+    },
+    "PAYSTACK_KEY": {
+      "description": "OPTIONAL: Your Paystack secret key",
+      "value": "",
+      "required": false
+    },
+    "AUTO_VIEW_STATUS": {
+      "description": "Enable auto-view status (true/false)",
+      "value": "true",
+      "required": false
+    },
+    "AUTO_REACT": {
+      "description": "Enable auto-react to messages (true/false)",
+      "value": "false",
+      "required": false
+    },
+    "PRESENCE": {
+      "description": "Show online presence (true/false)",
+      "value": "true",
+      "required": false
+    },
+    "RATE_LIMIT": {
+      "description": "Enable rate limiting (true/false)",
+      "value": "true",
+      "required": false
+    },
+    "BOT_MODE": {
+      "description": "Bot mode: public or private",
+      "value": "public",
+      "required": false
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    },
+    {
+      "url": "https://github.com/DuckyTeam/heroku-buildpack-imagemagick.git"
+    },
+    {
+      "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
+    },
+    {
+      "url": "https://github.com/clhuang/heroku-buildpack-webp-binaries.git"
+    }
+  ]
+}
