@@ -106,3 +106,4 @@ tmp/
 !package.json
 !owner.json
 index.js
+commands/
