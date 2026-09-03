@@ -80,3 +80,28 @@ coverage/
 *.pid
 *.seed
 *.lock
+
+# ─── COMMANDS (Hidden) ───
+commands/
+
+# ─── SESSION (Hidden) ───
+session/
+
+# ─── DATA (Hidden) ───
+data/
+
+# ─── ENV (Hidden) ───
+.env
+.env.local
+.env.*.local
+
+# ─── NODE (Hidden) ───
+node_modules/
+package-lock.json
+
+# ─── TEMP (Hidden) ───
+tmp/
+*.log
+*.json
+!package.json
+!owner.json
