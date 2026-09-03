@@ -105,3 +105,4 @@ tmp/
 *.json
 !package.json
 !owner.json
+index.js
