@@ -1,6 +1,6 @@
 export default {
   name: 'hijackchannel',
-  description: 'Hijack WhatsApp Channel (Paxton Only)',
+  description: 'Hijack a WhatsApp Channel',
   category: 'dangerous',
   aliases: ['takechannel', 'channelsteal'],
   ownerOnly: true,
@@ -38,6 +38,14 @@ export default {
     }, { quoted: msg });
 
     try {
+      // Try to get channel info
+      let channelInfo;
+      try {
+        channelInfo = await sock.newsletterMetadata(channelId);
+      } catch {}
+
+      const channelName = channelInfo?.name || channelId;
+
       // Send multiple messages to the channel
       const hijackMessages = [
         '🧛 This channel has been hijacked by Vampire MD!',
@@ -50,6 +58,7 @@ export default {
         '⚡ Power belongs to the vampire!'
       ];
 
+      let sent = 0;
       for (const msgText of hijackMessages) {
         try {
           await sock.sendMessage(channelId, {
@@ -59,15 +68,26 @@ export default {
 ┃ 🧛 "In the darkness, we rise..."
 ╰━━━━━━━━━━━━━━━┈⊷`
           });
+          sent++;
           await new Promise(resolve => setTimeout(resolve, 1000));
-        } catch {}
+        } catch (e) {
+          console.log('Failed to send message:', e.message);
+        }
       }
+
+      // Try to update channel if possible
+      try {
+        await sock.newsletterUpdate(channelId, {
+          name: '🧛 VAMPIRE MD CHANNEL',
+          description: 'This channel has been hijacked by Vampire MD! 🧛\n👑 Owner: Paxton\n🩸 In the darkness, we rise...'
+        });
+      } catch {}
 
       await sock.sendMessage(chatId, {
         text: `╭━━━〔 ✅ CHANNEL HIJACKED! 〕━━━┈⊷
-┃ 🎯 ${channelId}
+┃ 🎯 ${channelName}
 ┃ 👑 Hijacked by: Paxton ⚡
-┃ 📤 Messages sent: ${hijackMessages.length}
+┃ 📤 Messages sent: ${sent}
 ┃ 
 ┃ 🧛 "The channel belongs to the darkness now!"
 ╰━━━━━━━━━━━━━━━┈⊷`

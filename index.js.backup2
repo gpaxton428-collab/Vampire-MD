@@ -207,7 +207,7 @@ let prefixCache = DEFAULT_PREFIX;
 let prefixHistory = [];
 let isPrefixless = false;
 
-function getCurrentPrefix() { return isPrefixless ? '' : prefixCache; }
+function getCurrentPrefix() { if (isPrefixless) return ''; return prefixCache || '.'; }
 
 function savePrefixToFile(newPrefix) {
     try {
@@ -237,24 +237,6 @@ function loadPrefixFromFiles() {
     return DEFAULT_PREFIX;
 }
 
-function updatePrefixImmediately(newPrefix) {
-    const oldPrefix = prefixCache;
-    const oldIsPrefixless = isPrefixless;
-    const isNone = newPrefix === 'none' || newPrefix === '""' || newPrefix === "''" || newPrefix === '';
-    if (isNone) { isPrefixless = true; prefixCache = ''; }
-    else {
-        if (!newPrefix || newPrefix.trim() === '') return { success: false, error: 'Empty prefix' };
-        if (newPrefix.length > 5) return { success: false, error: 'Prefix too long' };
-        prefixCache = newPrefix.trim(); isPrefixless = false;
-    }
-    if (typeof global !== 'undefined') { global.prefix = getCurrentPrefix(); global.CURRENT_PREFIX = getCurrentPrefix(); global.isPrefixless = isPrefixless; }
-    process.env.PREFIX = getCurrentPrefix();
-    savePrefixToFile(newPrefix);
-    prefixHistory.push({ oldPrefix: oldIsPrefixless ? 'none' : oldPrefix, newPrefix: isPrefixless ? 'none' : prefixCache, isPrefixless, oldIsPrefixless, timestamp: new Date().toISOString(), time: Date.now() });
-    if (prefixHistory.length > 10) prefixHistory = prefixHistory.slice(-10);
-    updateTerminalHeader();
-    return { success: true, oldPrefix: oldIsPrefixless ? 'none' : oldPrefix, newPrefix: isPrefixless ? 'none' : prefixCache, isPrefixless, timestamp: new Date().toISOString() };
-}
 
 function updateTerminalHeader() {
     const currentPrefix = getCurrentPrefix();
@@ -1217,17 +1199,53 @@ async function handleDefaultCommands(commandName, sock, msg, args, currentPrefix
     const chatId = msg.key.remoteJid;
     const isOwnerUser = jidManager.isOwner(msg);
     try {
-        switch (commandName) {            
-            case 'prefix': {
-                const current = getCurrentPrefix();
-                const status = isPrefixless ? 'none (prefixless)' : `"${current}"`;
-                await sock.sendMessage(chatId, { 
-                    text: `╭━━━〔 🔤 PREFIX 〕━━━┈⊷
-┃ Current: ${status}
-┃ 
-┃ 🧛 "The summoning word."
-╰━━━━━━━━━━━━━━━┈⊷` 
-                }, { quoted: msg });
+        switch (commandName) {
+                }
+                if (!args[0]) { 
+                    const current = getCurrentPrefix(); 
+                    const status = isPrefixless ? 'none (prefixless)' : `"${current}"`;
+                    await sock.sendMessage(chatId, { text: `╭━━━〔 ⚙️ PREFIX 〕━━━┈⊷\n┃ Current: ${status}\n┃ \n┃ Usage: ${currentPrefix}setprefix <new>\n┃ Example: ${currentPrefix}setprefix !\n┃ ${currentPrefix}setprefix none (prefixless mode)\n┃ \n┃ 🧛 "Change the summoning word."\n╰━━━━━━━━━━━━━━━┈⊷` }, { quoted: msg }); 
+                    break; 
+                }
+                const result = updatePrefixImmediately(args[0]);
+                if (result.success) {
+                    const newDisplay = result.isPrefixless ? 'none (prefixless)' : `"${result.newPrefix}"`;
+                    await sock.sendMessage(chatId, { text: `╭━━━〔 ✅ PREFIX UPDATED 〕━━━┈⊷\n┃ Old: ${result.oldPrefix === 'none' ? 'none' : `"${result.oldPrefix}"`}\n┃ New: ${newDisplay}\n┃ \n┃ 🧛 "The summoning word has changed."\n╰━━━━━━━━━━━━━━━┈⊷` }, { quoted: msg });
+                } else {
+                    await sock.sendMessage(chatId, { text: `╭━━━〔 ❌ ERROR 〕━━━┈⊷\n┃ ${result.error}\n╰━━━━━━━━━━━━━━━┈⊷` }, { quoted: msg });
+                }
+                break;
+            }
+                }
+                if (!args[0]) { 
+                    const current = getCurrentPrefix(); 
+                    const status = isPrefixless ? 'none (prefixless)' : `"${current}"`;
+                    await sock.sendMessage(chatId, { text: `╭━━━〔 ⚙️ PREFIX 〕━━━┈⊷\n┃ Current: ${status}\n┃ \n┃ Usage: ${currentPrefix}setprefix <new>\n┃ Example: ${currentPrefix}setprefix !\n┃ ${currentPrefix}setprefix none (prefixless mode)\n┃ \n┃ 🧛 "Change the summoning word."\n╰━━━━━━━━━━━━━━━┈⊷` }, { quoted: msg }); 
+                    break; 
+                }
+                const result = updatePrefixImmediately(args[0]);
+                if (result.success) {
+                    const newDisplay = result.isPrefixless ? 'none (prefixless)' : `"${result.newPrefix}"`;
+                    await sock.sendMessage(chatId, { text: `╭━━━〔 ✅ PREFIX UPDATED 〕━━━┈⊷\n┃ Old: ${result.oldPrefix === 'none' ? 'none' : `"${result.oldPrefix}"`}\n┃ New: ${newDisplay}\n┃ \n┃ 🧛 "The summoning word has changed."\n╰━━━━━━━━━━━━━━━┈⊷` }, { quoted: msg });
+                } else {
+                    await sock.sendMessage(chatId, { text: `╭━━━〔 ❌ ERROR 〕━━━┈⊷\n┃ ${result.error}\n╰━━━━━━━━━━━━━━━┈⊷` }, { quoted: msg });
+                }
+                break;
+            }
+                }
+                if (!args[0]) { 
+                    const current = getCurrentPrefix(); 
+                    const status = isPrefixless ? 'none (prefixless)' : `"${current}"`;
+                    await sock.sendMessage(chatId, { text: `╭━━━〔 ⚙️ PREFIX 〕━━━┈⊷\n┃ Current: ${status}\n┃ \n┃ Usage: ${currentPrefix}setprefix <new>\n┃ Example: ${currentPrefix}setprefix !\n┃ ${currentPrefix}setprefix none (prefixless mode)\n┃ \n┃ 🧛 "Change the summoning word."\n╰━━━━━━━━━━━━━━━┈⊷` }, { quoted: msg }); 
+                    break; 
+                }
+                const result = updatePrefixImmediately(args[0]);
+                if (result.success) {
+                    const newDisplay = result.isPrefixless ? 'none (prefixless)' : `"${result.newPrefix}"`;
+                    await sock.sendMessage(chatId, { text: `╭━━━〔 ✅ PREFIX UPDATED 〕━━━┈⊷\n┃ Old: ${result.oldPrefix === 'none' ? 'none' : `"${result.oldPrefix}"`}\n┃ New: ${newDisplay}\n┃ \n┃ 🧛 "The summoning word has changed."\n╰━━━━━━━━━━━━━━━┈⊷` }, { quoted: msg });
+                } else {
+                    await sock.sendMessage(chatId, { text: `╭━━━〔 ❌ ERROR 〕━━━┈⊷\n┃ ${result.error}\n╰━━━━━━━━━━━━━━━┈⊷` }, { quoted: msg });
+                }
                 break;
             }
             case 'setprefix': {
@@ -1238,40 +1256,19 @@ async function handleDefaultCommands(commandName, sock, msg, args, currentPrefix
                 if (!args[0]) { 
                     const current = getCurrentPrefix(); 
                     const status = isPrefixless ? 'none (prefixless)' : `"${current}"`;
-                    await sock.sendMessage(chatId, { 
-                        text: `╭━━━〔 ⚙️ PREFIX 〕━━━┈⊷
-┃ Current: ${status}
-┃ 
-┃ Usage: ${currentPrefix}setprefix <new>
-┃ Example: ${currentPrefix}setprefix !
-┃ ${currentPrefix}setprefix none (prefixless mode)
-┃ 
-┃ 🧛 "Change the summoning word."
-╰━━━━━━━━━━━━━━━┈⊷` 
-                    }, { quoted: msg }); 
+                    await sock.sendMessage(chatId, { text: `╭━━━〔 ⚙️ PREFIX 〕━━━┈⊷\n┃ Current: ${status}\n┃ \n┃ Usage: ${currentPrefix}setprefix <new>\n┃ Example: ${currentPrefix}setprefix !\n┃ ${currentPrefix}setprefix none (prefixless mode)\n┃ \n┃ 🧛 "Change the summoning word."\n╰━━━━━━━━━━━━━━━┈⊷` }, { quoted: msg }); 
                     break; 
                 }
                 const result = updatePrefixImmediately(args[0]);
                 if (result.success) {
                     const newDisplay = result.isPrefixless ? 'none (prefixless)' : `"${result.newPrefix}"`;
-                    await sock.sendMessage(chatId, { 
-                        text: `╭━━━〔 ✅ PREFIX UPDATED 〕━━━┈⊷
-┃ Old: ${result.oldPrefix === 'none' ? 'none' : `"${result.oldPrefix}"`}
-┃ New: ${newDisplay}
-┃ 
-┃ 🧛 "The summoning word has changed."
-╰━━━━━━━━━━━━━━━┈⊷` 
-                    }, { quoted: msg });
+                    await sock.sendMessage(chatId, { text: `╭━━━〔 ✅ PREFIX UPDATED 〕━━━┈⊷\n┃ Old: ${result.oldPrefix === 'none' ? 'none' : `"${result.oldPrefix}"`}\n┃ New: ${newDisplay}\n┃ \n┃ 🧛 "The summoning word has changed."\n╰━━━━━━━━━━━━━━━┈⊷` }, { quoted: msg });
                 } else {
-                    await sock.sendMessage(chatId, { 
-                        text: `╭━━━〔 ❌ ERROR 〕━━━┈⊷
-┃ ${result.error}
-╰━━━━━━━━━━━━━━━┈⊷` 
-                    }, { quoted: msg });
+                    await sock.sendMessage(chatId, { text: `╭━━━〔 ❌ ERROR 〕━━━┈⊷\n┃ ${result.error}\n╰━━━━━━━━━━━━━━━┈⊷` }, { quoted: msg });
                 }
                 break;
             }
-case 'ping': await sock.sendMessage(chatId, { text: `🧛 *Vampire MD v${VERSION}* — Pong! ✅\n⏱️ Uptime: ${Math.round(process.uptime())}s` }, { quoted: msg }); break;
+            case 'ping': await sock.sendMessage(chatId, { text: `🧛 *Vampire MD v${VERSION}* — Pong! ✅\n⏱️ Uptime: ${Math.round(process.uptime())}s` }, { quoted: msg }); break;
             case 'uptime': { const uptime = process.uptime(); await sock.sendMessage(chatId, { text: `⏰ *Uptime:* ${Math.floor(uptime / 3600)}h ${Math.floor((uptime % 3600) / 60)}m ${Math.floor(uptime % 60)}s\n💾 *Memory:* ${Math.round(process.memoryUsage().rss / 1024 / 1024)}MB` }, { quoted: msg }); break; }
             case 'help':
             case 'menu': {

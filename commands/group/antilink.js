@@ -1,3 +1,5 @@
+import fs from 'fs';
+
 export default {
   name: 'antilink',
   description: 'Block links in group',
@@ -5,26 +7,35 @@ export default {
   aliases: ['linkprotect', 'nolink'],
   async execute(sock, msg, args, prefix) {
     const chatId = msg.key.remoteJid;
-    const sub = (args[0] || '').toLowerCase();
 
     if (!chatId.endsWith('@g.us')) {
       return sock.sendMessage(chatId, {
         text: `╭━━━〔 ❌ ERROR 〕━━━┈⊷
-┃ This command can only be used in groups.
+┃ This command only works in groups.
 ╰━━━━━━━━━━━━━━━┈⊷`
       }, { quoted: msg });
     }
 
-    if (!global.antilinkGroups) global.antilinkGroups = new Set();
-    const groupOn = global.antilinkGroups.has(chatId);
+    const sub = args[0]?.toLowerCase();
 
-    if (!sub) {
+    const configFile = './antilink.json';
+    let config = {};
+    if (fs.existsSync(configFile)) {
+      try {
+        config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
+      } catch {}
+    }
+
+    if (!config[chatId]) config[chatId] = { enabled: false };
+
+    if (!sub || !['on', 'off', 'status'].includes(sub)) {
+      const status = config[chatId].enabled ? '🟢 ENABLED' : '🔴 DISABLED';
       return sock.sendMessage(chatId, {
         text: `╭━━━〔 🔗 ANTI-LINK STATUS 〕━━━┈⊷
-┃ Status: ${groupOn ? '🟢 ENABLED' : '🔴 DISABLED'}
+┃ Status: ${status}
 ┃ 
 ┃ Usage:
-┃ ${prefix}antilink on  - Block all links
+┃ ${prefix}antilink on  - Block links
 ┃ ${prefix}antilink off - Allow links
 ┃ ${prefix}antilink status - Check status
 ┃ 
@@ -34,17 +45,39 @@ export default {
     }
 
     if (sub === 'on' || sub === 'enable') {
-      global.antilinkGroups.add(chatId);
+      config[chatId].enabled = true;
+      fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
+
+      // Hook into messages
+      if (!global.antilinkHooked) {
+        global.antilinkHooked = true;
+        sock.ev.on('messages.upsert', async ({ messages }) => {
+          const msg = messages[0];
+          if (!msg.message || msg.key.fromMe) return;
+          const chatId = msg.key.remoteJid;
+          if (!config[chatId]?.enabled) return;
+
+          const text = msg.message.conversation || msg.message.extendedTextMessage?.text || '';
+          if (text.match(/(https?:\/\/[^\s]+)/)) {
+            try {
+              await sock.sendMessage(chatId, { delete: msg.key });
+            } catch {}
+          }
+        });
+      }
+
       return sock.sendMessage(chatId, {
         text: `╭━━━〔 ✅ ANTI-LINK ENABLED 〕━━━┈⊷
-┃ Links will be deleted.
+┃ Links will be deleted!
 ┃ 🧛 "The coven is protected."
 ╰━━━━━━━━━━━━━━━┈⊷`
       }, { quoted: msg });
     }
 
     if (sub === 'off' || sub === 'disable') {
-      global.antilinkGroups.delete(chatId);
+      config[chatId].enabled = false;
+      fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
+
       return sock.sendMessage(chatId, {
         text: `╭━━━〔 ❌ ANTI-LINK DISABLED 〕━━━┈⊷
 ┃ Links are now allowed.
@@ -54,10 +87,11 @@ export default {
     }
 
     if (sub === 'status') {
+      const status = config[chatId].enabled ? '🟢 ENABLED' : '🔴 DISABLED';
       return sock.sendMessage(chatId, {
         text: `╭━━━〔 🔗 ANTI-LINK STATUS 〕━━━┈⊷
-┃ Status: ${groupOn ? '🟢 ENABLED' : '🔴 DISABLED'}
-┃ 👥 Groups: ${global.antilinkGroups.size}
+┃ Status: ${status}
+┃ 🧛 "The darkness watches."
 ╰━━━━━━━━━━━━━━━┈⊷`
       }, { quoted: msg });
     }
