@@ -1213,20 +1213,21 @@ async function handleIncomingMessage(sock, msg) {
     } catch (error) { UltraCleanLogger.error(`Message handler error: ${error.message}`); }
 }
 
+async function main() {
 async function handleDefaultCommands(commandName, sock, msg, args, currentPrefix, isPrefixless) {
     const chatId = msg.key.remoteJid;
     const isOwnerUser = jidManager.isOwner(msg);
     try {
-        switch (commandName) {            
+        switch (commandName) {
             case 'prefix': {
                 const current = getCurrentPrefix();
                 const status = isPrefixless ? 'none (prefixless)' : `"${current}"`;
-                await sock.sendMessage(chatId, { 
+                await sock.sendMessage(chatId, {
                     text: `╭━━━〔 🔤 PREFIX 〕━━━┈⊷
 ┃ Current: ${status}
 ┃ 
 ┃ 🧛 "The summoning word."
-╰━━━━━━━━━━━━━━━┈⊷` 
+╰━━━━━━━━━━━━━━━┈⊷`
                 }, { quoted: msg });
                 break;
             }
@@ -1251,28 +1252,129 @@ async function handleDefaultCommands(commandName, sock, msg, args, currentPrefix
                     }, { quoted: msg }); 
                     break; 
                 }
-                const result = updatePrefixImmediately(args[0]);
-                if (result.success) {
-                    const newDisplay = result.isPrefixless ? 'none (prefixless)' : `"${result.newPrefix}"`;
-                    await sock.sendMessage(chatId, { 
-                        text: `╭━━━〔 ✅ PREFIX UPDATED 〕━━━┈⊷
-┃ Old: ${result.oldPrefix === 'none' ? 'none' : `"${result.oldPrefix}"`}
-┃ New: ${newDisplay}
+                
+                const newPrefix = args[0];
+                const isNone = newPrefix === 'none' || newPrefix === '""' || newPrefix === "''" || newPrefix === '';
+                
+                // Update the prefix
+                if (isNone) {
+                    isPrefixless = true;
+                    prefixCache = '';
+                } else {
+                    if (!newPrefix || newPrefix.trim() === '') {
+                        await sock.sendMessage(chatId, { text: '❌ Empty prefix' }, { quoted: msg });
+                        break;
+                    }
+                    if (newPrefix.length > 5) {
+                        await sock.sendMessage(chatId, { text: '❌ Prefix too long (max 5 characters)' }, { quoted: msg });
+                        break;
+                    }
+                    prefixCache = newPrefix.trim();
+                    isPrefixless = false;
+                }
+                
+                // Update environment
+                process.env.PREFIX = getCurrentPrefix();
+                
+                // Save to files
+                try {
+                    fs.writeFileSync(PREFIX_CONFIG_FILE, JSON.stringify({ 
+                        prefix: isPrefixless ? '' : prefixCache, 
+                        isPrefixless: isNone,
+                        setAt: new Date().toISOString(),
+                        version: VERSION 
+                    }, null, 2));
+                    
+                    fs.writeFileSync(BOT_SETTINGS_FILE, JSON.stringify({ 
+                        prefix: isPrefixless ? '' : prefixCache, 
+                        isPrefixless: isNone,
+                        prefixSetAt: new Date().toISOString(),
+                        version: VERSION 
+                    }, null, 2));
+                } catch (e) {
+                    console.log('Error saving prefix:', e.message);
+                }
+                
+                // Update global
+                if (typeof global !== 'undefined') { 
+                    global.prefix = getCurrentPrefix(); 
+                    global.CURRENT_PREFIX = getCurrentPrefix(); 
+                    global.isPrefixless = isPrefixless; 
+                }
+                
+                const newDisplay = isPrefixless ? 'none (prefixless)' : `"${prefixCache}"`;
+                await sock.sendMessage(chatId, { 
+                    text: `╭━━━〔 ✅ PREFIX UPDATED 〕━━━┈⊷
+┃ New Prefix: ${newDisplay}
 ┃ 
 ┃ 🧛 "The summoning word has changed."
 ╰━━━━━━━━━━━━━━━┈⊷` 
-                    }, { quoted: msg });
-                } else {
-                    await sock.sendMessage(chatId, { 
-                        text: `╭━━━〔 ❌ ERROR 〕━━━┈⊷
-┃ ${result.error}
-╰━━━━━━━━━━━━━━━┈⊷` 
-                    }, { quoted: msg });
-                }
+                }, { quoted: msg });
                 break;
             }
-case 'ping': await sock.sendMessage(chatId, { text: `🧛 *Vampire MD v${VERSION}* — Pong! ✅\n⏱️ Uptime: ${Math.round(process.uptime())}s` }, { quoted: msg }); break;
-            case 'uptime': { const uptime = process.uptime(); await sock.sendMessage(chatId, { text: `⏰ *Uptime:* ${Math.floor(uptime / 3600)}h ${Math.floor((uptime % 3600) / 60)}m ${Math.floor(uptime % 60)}s\n💾 *Memory:* ${Math.round(process.memoryUsage().rss / 1024 / 1024)}MB` }, { quoted: msg }); break; }
+            case 'ping': {
+                const start = Date.now();
+                
+                // Send initial message
+                const sentMsg = await sock.sendMessage(chatId, { 
+                    text: `╭━━━〔 🏓 PING 〕━━━┈⊷
+┃
+┃ 📡 Measuring latency...
+┃ 🧛 "The darkness calculates..."
+╰━━━━━━━━━━━━━━━┈⊷` 
+                }, { quoted: msg });
+                
+                const latency = Date.now() - start;
+                const uptime = process.uptime();
+                const hours = Math.floor(uptime / 3600);
+                const minutes = Math.floor((uptime % 3600) / 60);
+                const seconds = Math.floor(uptime % 60);
+                const memory = process.memoryUsage();
+                
+                let status, emoji;
+                if (latency < 150) {
+                    status = '🚀 Excellent';
+                    emoji = '🟢';
+                } else if (latency < 300) {
+                    status = '📡 Good';
+                    emoji = '🟡';
+                } else if (latency < 500) {
+                    status = '🌑 Slow';
+                    emoji = '🟠';
+                } else {
+                    status = '💀 Very Slow';
+                    emoji = '🔴';
+                }
+                
+                // Edit the message with results
+                await sock.sendMessage(chatId, { 
+                    text: `╭━━━〔 🏓 PONG 〕━━━┈⊷
+┃
+┃ ${emoji} *Ping:* ${latency}ms
+┃ 📊 *Status:* ${status}
+┃
+┃ ⏱️ *Uptime:* ${hours}h ${minutes}m ${seconds}s
+┃ 💾 *Memory:* ${(memory.rss / 1024 / 1024).toFixed(1)} MB
+┃ ⚡ *Speed:* ${(latency > 0 ? (1000 / latency).toFixed(0) : '∞')} req/s
+┃
+┃ 🧛 "The darkness responds."
+╰━━━━━━━━━━━━━━━┈⊷` 
+                }, { edit: sentMsg.key });
+                break;
+            }
+            case 'uptime': { 
+                const uptime = process.uptime(); 
+                await sock.sendMessage(chatId, { 
+                    text: `╭━━━〔 ⏰ UPTIME 〕━━━┈⊷
+┃ 
+┃ ⏱️ ${Math.floor(uptime / 3600)}h ${Math.floor((uptime % 3600) / 60)}m ${Math.floor(uptime % 60)}s
+┃ 💾 Memory: ${Math.round(process.memoryUsage().rss / 1024 / 1024)}MB
+┃ 
+┃ 🧛 "The darkness never sleeps."
+╰━━━━━━━━━━━━━━━┈⊷` 
+                }, { quoted: msg }); 
+                break; 
+            }
             case 'help':
             case 'menu': {
                 let helpText = `╭━━━〔 🌑 VAMPIRE MD V2.5.0 〕━━━┈⊷\n`;
@@ -1292,13 +1394,29 @@ case 'ping': await sock.sendMessage(chatId, { text: `🧛 *Vampire MD v${VERSION
                 await sock.sendMessage(chatId, { text: helpText, mentions: [msg.key.participant || msg.key.remoteJid] }, { quoted: msg });
                 break;
             }
-            case 'statusstats': { if (!statusDetector) { await sock.sendMessage(chatId, { text: '❌ Status Detector not initialized' }, { quoted: msg }); break; } const stats = statusDetector.getStats(); await sock.sendMessage(chatId, { text: `👁️ *STATUS DETECTOR STATS*\n\n📊 Total Detected: ${stats.totalDetected}\n🕒 Last Detection: ${stats.lastDetection}\n🔧 Detection Enabled: ${stats.detectionEnabled ? '✅' : '❌'}` }, { quoted: msg }); break; }
-            case 'prefixinfo': { const currentP = getCurrentPrefix(); await sock.sendMessage(chatId, { text: `💬 *PREFIX INFO*\n\nCurrent Prefix: ${isPrefixless ? 'none' : `"${currentP}"`}\nPrefixless Mode: ${isPrefixless ? '✅' : '❌'}` }, { quoted: msg }); break; }
+            case 'statusstats': { 
+                if (!statusDetector) { 
+                    await sock.sendMessage(chatId, { text: '❌ Status Detector not initialized' }, { quoted: msg }); 
+                    break; 
+                } 
+                const stats = statusDetector.getStats(); 
+                await sock.sendMessage(chatId, { 
+                    text: `👁️ *STATUS DETECTOR STATS*\n\n📊 Total Detected: ${stats.totalDetected}\n🕒 Last Detection: ${stats.lastDetection}\n🔧 Detection Enabled: ${stats.detectionEnabled ? '✅' : '❌'}` 
+                }, { quoted: msg }); 
+                break; 
+            }
+            case 'prefixinfo': { 
+                const currentP = getCurrentPrefix(); 
+                await sock.sendMessage(chatId, { 
+                    text: `💬 *PREFIX INFO*\n\nCurrent Prefix: ${isPrefixless ? 'none' : `"${currentP}"`}\nPrefixless Mode: ${isPrefixless ? '✅' : '❌'}` 
+                }, { quoted: msg }); 
+                break; 
+            }
         }
-    } catch (error) { UltraCleanLogger.error(`Default command error: ${error.message}`); }
-}
-async function main() {
-    try {
+    } catch (error) { 
+        UltraCleanLogger.error(`Default command error: ${error.message}`); 
+    }
+}    try {
         UltraCleanLogger.success(`🚀 Starting ${BOT_NAME} v${VERSION}`);
         const loginManager = new LoginManager();
         const loginInfo = await loginManager.selectMode();
