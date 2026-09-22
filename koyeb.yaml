@@ -1,0 +1,26 @@
+# Koyeb deployment config for the Vampire MD pairing site.
+# The bot itself (index.js) has no HTTP port and should run as a separate
+# Koyeb "worker" service, or on a host like Railway/Render's worker type.
+name: vampire-md-pairing
+services:
+  - name: pairing
+    type: web
+    instance_type: nano
+    regions:
+      - fra
+    scaling:
+      min: 1
+      max: 1
+    ports:
+      - port: 3000
+        protocol: http
+    routes:
+      - path: /
+        port: 3000
+    env:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3000"
+    docker:
+      dockerfile: Dockerfile.pairing

@@ -1,0 +1,46 @@
+services:
+  # Pairing site — the public-facing QR/session generator (needs a port).
+  - type: web
+    name: vampire-md-pairing
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node web-session/server.js
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+  # The actual WhatsApp bot — runs in the background, no HTTP port needed.
+  - type: worker
+    name: vampire-md-bot
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node --no-warnings --experimental-global-webcrypto index.js
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: BOT_NAME
+        value: Vampire MD
+      - key: OWNER_NUMBER
+        value: "263776699348"
+      - key: GITHUB_REPO
+        value: https://github.com/gpaxton428-collab/Vampire-MD
+      - key: PREFIX
+        value: .
+      - key: SESSION_ID
+        value: ""
+        sync: false
+      - key: AUTO_VIEW_STATUS
+        value: true
+      - key: AUTO_REACT
+        value: false
+      - key: PRESENCE
+        value: true
+      - key: RATE_LIMIT
+        value: true
+      - key: BOT_MODE
+        value: public

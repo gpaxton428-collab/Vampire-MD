@@ -1,0 +1,15 @@
+# Builds just the pairing/session-generator site (web-session/).
+# Deploy this on Koyeb/Render/any platform that needs a service bound to a port.
+FROM node:18-slim
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install --production
+
+COPY . .
+
+EXPOSE 3000
+ENV PORT=3000
+
+CMD ["node", "web-session/server.js"]

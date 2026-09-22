@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vampire MD — Pairing Site</title>
+<style>
+  :root {
+    --bg: #060305; --card: #0e0508; --border: #4a0f1a; --accent: #e10c2c;
+    --accent2: #ff3b52; --text: #f3e6e9; --muted: #a9808b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    padding-bottom: 40px;
+  }
+  .hero {
+    position: relative; padding: 22px 18px 28px; overflow: hidden;
+    background: radial-gradient(ellipse at top right, rgba(225,12,44,0.25), transparent 60%), #0a0406;
+    border-bottom: 1px solid var(--border);
+  }
+  .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 26px; }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand .v { font-weight: 900; font-size: 22px; color: #fff; }
+  .brand-text .name { font-weight: 800; font-size: 18px; letter-spacing: 0.5px; }
+  .brand-text .name span { color: var(--accent2); }
+  .brand-text .sub { font-size: 10px; letter-spacing: 2px; color: var(--muted); }
+  .status-pill {
+    display: flex; align-items: center; gap: 6px; background: rgba(20,20,20,0.6);
+    border: 1px solid #234; padding: 6px 12px; border-radius: 20px; font-size: 12px;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; }
+  .title { font-size: 28px; font-weight: 800; margin: 0; }
+  .title .hl { color: var(--accent2); }
+  .desc { color: var(--muted); font-size: 13px; margin: 6px 0 0; }
+
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    margin: 18px 16px; padding: 20px; box-shadow: 0 0 30px rgba(225,12,44,0.08);
+  }
+  .card h2 { margin: 0 0 4px; font-size: 17px; display: flex; align-items: center; gap: 8px; }
+  .card p.hint { margin: 0 0 16px; color: var(--muted); font-size: 12.5px; }
+
+  .qr-wrap {
+    display: flex; justify-content: center; align-items: center;
+    background: #fff; border: 2px solid var(--accent); border-radius: 12px;
+    padding: 14px; width: 220px; height: 220px; margin: 0 auto;
+    box-shadow: 0 0 24px rgba(225,12,44,0.35);
+  }
+  .qr-wrap img { width: 100%; height: 100%; object-fit: contain; }
+  .qr-placeholder { color: #999; font-size: 12px; text-align: center; }
+
+  .steps { margin-top: 18px; display: flex; flex-direction: column; gap: 12px; }
+  .step { display: flex; align-items: center; gap: 12px; }
+  .step .num {
+    width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--accent);
+    color: var(--accent2); display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+  .step .txt .t1 { font-size: 13.5px; font-weight: 600; }
+  .step .txt .t2 { font-size: 11.5px; color: var(--muted); }
+
+  .banner {
+    margin-top: 16px; display: flex; align-items: center; gap: 10px;
+    border: 1px solid var(--accent); border-radius: 10px; padding: 12px;
+    background: rgba(225,12,44,0.08);
+  }
+  .banner .t1 { font-size: 13px; font-weight: 700; color: var(--accent2); }
+  .banner .t2 { font-size: 11.5px; color: var(--muted); }
+
+  .safe {
+    display: flex; align-items: center; gap: 10px; margin-top: 12px;
+    border: 1px solid #234; border-radius: 10px; padding: 12px;
+  }
+  .safe .t1 { font-size: 13px; font-weight: 600; }
+  .safe .t2 { font-size: 11.5px; color: var(--muted); }
+
+  .session-box {
+    word-break: break-all; background: #150609; border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px; font-size: 11.5px; margin-top: 12px; max-height: 150px; overflow-y: auto;
+  }
+  button {
+    width: 100%; margin-top: 12px; padding: 12px; border-radius: 10px; border: none; cursor: pointer;
+    background: linear-gradient(135deg, var(--accent2), #6a000f); color: #fff; font-weight: 700; font-size: 14px;
+  }
+  button:disabled { opacity: 0.55; cursor: not-allowed; }
+
+  .features { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .feature { border: 1px solid var(--border); border-radius: 10px; padding: 12px; font-size: 12.5px; }
+  .feature .t1 { font-weight: 600; margin-bottom: 2px; }
+  .feature .t2 { color: var(--muted); font-size: 11px; }
+
+  footer { text-align: center; margin-top: 20px; }
+  footer .brand { justify-content: center; margin-bottom: 4px; font-size: 12px; color: var(--muted); }
+  .links { display: flex; justify-content: space-around; border-top: 1px solid var(--border); padding-top: 14px; margin: 14px 16px 0; font-size: 12.5px; }
+  .links a { color: var(--text); text-decoration: none; }
+
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="topbar">
+    <div class="brand">
+      <div class="v">🧛</div>
+      <div class="brand-text">
+        <div class="name">VAMPIRE <span>MD</span></div>
+        <div class="sub">BY VAMPIRE TECH</div>
+      </div>
+    </div>
+    <div class="status-pill"><span class="dot"></span> <span id="statusLabel">Checking...</span></div>
+  </div>
+  <h1 class="title">Vampire <span class="hl">MD</span></h1>
+  <p class="desc">Advanced pairing site · Multiple device WhatsApp bot · by Vampire Tech</p>
+</div>
+
+<div class="card">
+  <h2>🔗 Pair Your Device</h2>
+  <p class="hint">Scan the QR code with your WhatsApp app</p>
+
+  <div class="qr-wrap" id="qrWrap">
+    <div class="qr-placeholder" id="qrPlaceholder">Tap "Generate QR Code" below to begin</div>
+    <img id="qrImg" class="hidden" alt="WhatsApp linking QR code" />
+  </div>
+
+  <div class="steps">
+    <div class="step"><div class="num">1</div><div class="txt"><div class="t1">Open WhatsApp</div><div class="t2">On your phone</div></div></div>
+    <div class="step"><div class="num">2</div><div class="txt"><div class="t1">Tap Menu</div><div class="t2">3 dots (⋮) → Linked Devices</div></div></div>
+    <div class="step"><div class="num">3</div><div class="txt"><div class="t1">Scan QR Code</div><div class="t2">Point your camera at the code</div></div></div>
+  </div>
+
+  <button id="startBtn">Generate QR Code</button>
+
+  <div class="banner hidden" id="statusBanner">
+    <div>⚡</div>
+    <div>
+      <div class="t1" id="bannerT1">Ready to Pair</div>
+      <div class="t2" id="bannerT2">Scan the QR code to continue</div>
+    </div>
+  </div>
+
+  <div id="sessionArea" class="hidden">
+    <div class="session-box" id="sessionText"></div>
+    <button id="copyBtn">Copy Session ID</button>
+  </div>
+
+  <div class="safe">
+    <div>🛡️</div>
+    <div>
+      <div class="t1">Your data is safe with us</div>
+      <div class="t2">Generated locally · never shared · treat your session string like a password</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>⭐ Features</h2>
+  <div class="features">
+    <div class="feature"><div class="t1">📱 Multiple Device Support</div><div class="t2">Use on all your devices</div></div>
+    <div class="feature"><div class="t1">🛡️ Anti-Ban Protection</div><div class="t2">Stay safe and active</div></div>
+    <div class="feature"><div class="t1">⚡ Fast & Stable</div><div class="t2">Smooth performance</div></div>
+    <div class="feature"><div class="t1">👑 Owner & Dev Tools</div><div class="t2">Full bot control</div></div>
+  </div>
+</div>
+
+<footer>
+  <div class="brand">🧛 VAMPIRE TECH · Powered by Vampire Tech</div>
+  <div class="links">
+    <a href="https://github.com/gpaxton428-collab/Vampire-MD" target="_blank">GitHub</a>
+    <a href="#" target="_blank">Telegram</a>
+    <a href="#" target="_blank">Support</a>
+  </div>
+</footer>
+
+<script>
+const startBtn = document.getElementById('startBtn');
+const qrImg = document.getElementById('qrImg');
+const qrPlaceholder = document.getElementById('qrPlaceholder');
+const statusBanner = document.getElementById('statusBanner');
+const bannerT1 = document.getElementById('bannerT1');
+const bannerT2 = document.getElementById('bannerT2');
+const sessionArea = document.getElementById('sessionArea');
+const sessionText = document.getElementById('sessionText');
+const copyBtn = document.getElementById('copyBtn');
+const statusLabel = document.getElementById('statusLabel');
+
+let pollTimer = null;
+
+fetch('/api/health').then(r => r.json()).then(d => {
+  statusLabel.textContent = d.online ? 'Server Online' : 'Server Offline';
+}).catch(() => { statusLabel.textContent = 'Server Offline'; });
+
+startBtn.addEventListener('click', async () => {
+  startBtn.disabled = true;
+  startBtn.textContent = 'Generating...';
+  statusBanner.classList.remove('hidden');
+  bannerT1.textContent = 'Connecting...';
+  bannerT2.textContent = 'Requesting a fresh QR code';
+  sessionArea.classList.add('hidden');
+
+  try {
+    const res = await fetch('/api/qr/start', { method: 'POST' });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to start pairing.');
+
+    pollTimer = setInterval(async () => {
+      const s = await fetch('/api/qr/status/' + data.id).then(r => r.json());
+      if (s.status === 'qr') {
+        qrPlaceholder.classList.add('hidden');
+        qrImg.classList.remove('hidden');
+        qrImg.src = s.qr;
+        bannerT1.textContent = 'Ready to Pair';
+        bannerT2.textContent = 'Scan the QR code to continue';
+      } else if (s.status === 'linked') {
+        clearInterval(pollTimer);
+        bannerT1.textContent = '✅ Linked!';
+        bannerT2.textContent = 'Copy your session string below';
+        sessionArea.classList.remove('hidden');
+        sessionText.textContent = s.sessionId;
+        startBtn.disabled = false;
+        startBtn.textContent = 'Generate New QR Code';
+      } else if (s.status === 'error') {
+        clearInterval(pollTimer);
+        bannerT1.textContent = '❌ Failed';
+        bannerT2.textContent = s.error;
+        startBtn.disabled = false;
+        startBtn.textContent = 'Try Again';
+      }
+    }, 2500);
+  } catch (e) {
+    bannerT1.textContent = '❌ Failed';
+    bannerT2.textContent = e.message;
+    startBtn.disabled = false;
+    startBtn.textContent = 'Try Again';
+  }
+});
+
+copyBtn.addEventListener('click', () => {
+  navigator.clipboard.writeText(sessionText.textContent);
+  copyBtn.textContent = 'Copied!';
+  setTimeout(() => (copyBtn.textContent = 'Copy Session ID'), 1500);
+});
+</script>
+</body>
+</html>

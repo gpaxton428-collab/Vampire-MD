@@ -1,0 +1,12 @@
+{
+  "prefix": ".",
+  "isPrefixless": false,
+  "botName": "Vampire MD",
+  "menuStyle": "interactive-list",
+  "autoRead": false,
+  "autoViewStatus": true,
+  "antiLink": false,
+  "antiDelete": false,
+  "antiSudo": false,
+  "version": "3.0.0"
+}

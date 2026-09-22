@@ -1,0 +1,78 @@
+{
+  "name": "Vampire MD",
+  "description": "Vampire MD WhatsApp Bot — owner/dev commands, interactive buttons, web session generator",
+  "logo": "https://i.ibb.co/zWGkw7Jz/767022de0778.png",
+  "keywords": ["whatsapp", "bot", "vampire", "baileys", "session"],
+  "repository": "https://github.com/gpaxton428-collab/Vampire-MD",
+  "scripts": {
+    "start": "node --no-warnings --experimental-global-webcrypto index.js"
+  },
+  "env": {
+    "BOT_NAME": {
+      "description": "Your bot name",
+      "value": "Vampire MD",
+      "required": false
+    },
+    "OWNER_NUMBER": {
+      "description": "Owner's WhatsApp number, no + or spaces",
+      "value": "263776699348",
+      "required": true
+    },
+    "GITHUB_REPO": {
+      "description": "Link shown by the .repo command",
+      "value": "https://github.com/gpaxton428-collab/Vampire-MD",
+      "required": false
+    },
+    "PREFIX": {
+      "description": "Command prefix (use 'none' for no prefix)",
+      "value": ".",
+      "required": false
+    },
+    "SESSION_ID": {
+      "description": "Session string from the web session generator (web-session/)",
+      "value": "",
+      "required": true
+    },
+    "AUTO_VIEW_STATUS": {
+      "description": "Enable auto-view status (true/false)",
+      "value": "true",
+      "required": false
+    },
+    "AUTO_REACT": {
+      "description": "Enable auto-react to messages (true/false)",
+      "value": "false",
+      "required": false
+    },
+    "PRESENCE": {
+      "description": "Show online presence (true/false)",
+      "value": "true",
+      "required": false
+    },
+    "RATE_LIMIT": {
+      "description": "Enable rate limiting (true/false)",
+      "value": "true",
+      "required": false
+    },
+    "BOT_MODE": {
+      "description": "Bot mode: public, private, or silent",
+      "value": "public",
+      "required": false
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    },
+    "worker": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  },
+  "buildpacks": [
+    { "url": "heroku/nodejs" },
+    { "url": "https://github.com/DuckyTeam/heroku-buildpack-imagemagick.git" },
+    { "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git" },
+    { "url": "https://github.com/clhuang/heroku-buildpack-webp-binaries.git" }
+  ]
+}

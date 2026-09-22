@@ -1,0 +1,12 @@
+node_modules/
+.env
+session/*.json
+!session/.gitkeep
+*.log
+bot.log
+prefix_config.json
+bot_mode.json
+auto_join_log.json
+data/status_detection_logs.json
+data/member_detection.json
+data/banned.json
